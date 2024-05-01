@@ -3,10 +3,11 @@
 <style>
     body{
 
-        background: #8b8585;
+        background: #f4f4f4;
         padding: 0;
         margin: 0;
         zoom: 80%;
+        overflow-x: hidden;
     }
     .header{
         display: flex;
@@ -20,7 +21,7 @@
         justify-content: space-between;
         margin: auto;
         display: flex;
-        width: 1779px;
+        width: calc(100% - 141px);
         height: 60px;
     }
     .logo{
@@ -31,8 +32,6 @@
     .navbar{
         margin-bottom:auto;
         margin-top: auto;
-        margin-left: auto;
-        margin-right: 80px;
         height: 39px;
         width: auto;
         display: inline-flex;
@@ -111,6 +110,266 @@
         width: 50px;
         background: white;
     }
+    .left-section{
+        margin-left: 70px;
+    }
+    .newdivan-info{
+        justify-content: space-between;
+        align-items: center;
+        display: flex;
+        height: 100px;
+        width: 1060px;
+    }
+    .title-block{
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 48px;
+        line-height: 100%;
+        color: #2a2a28;
+    }
+    .stats-block{
+        display: flex;
+        justify-content: space-between;
+        width: 700px;
+        gap: 20px;
+    }
+    .stat{
+        border-radius: 20px;
+        width: 220px;
+        height: 100px;
+        backdrop-filter: blur(50px);
+        box-shadow: inset 0 0 20px -3px rgba(255, 255, 255, 0.1);
+        background: #2a2a28;
+    }
+    .stat-title{
+        margin: 20px;
+        margin-bottom: 10px;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 100%;
+        color: #fff;
+    }
+    .stat-info{
+        margin-left: 20px;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 26px;
+        line-height: 100%;
+        color: #fff;
+    }
+    .turnover-graph{
+        position: relative;
+        margin-top: 19px;
+        border-radius: 20px;
+        width: 1060px;
+        height: 301px;
+        backdrop-filter: blur(50px);
+        box-shadow: inset 0 0 20px -3px rgba(255, 255, 255, 0.1);
+        background: #fff;
+
+    }
+    .graph-info{
+        position: absolute;
+        padding-top: 30px;
+        margin-left: 30px;
+        width: 260px;
+        height: 53px;
+    }
+    .turnover-info{
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 32px;
+        line-height: 100%;
+        color: #2a2a28;
+    }
+    .turnover-info span{
+        font-weight: 300;
+    }
+    .turnover-title{
+        margin-top: 5px;
+        font-family: "Inter", sans-serif;
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 100%;
+        color: #2a2a28;
+    }
+    #myChart {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1; /* График будет под слоем с информацией */
+    }
+    .orders-block{
+        flex-wrap: wrap;
+        gap: 20px;
+        display: flex;
+        width: 1060px;
+        margin-top: 20px;
+    }
+    .orders-count-info{
+        border-radius: 10px;
+        width: 340px;
+        height: 220px;
+        box-shadow: 0 0 20px -3px rgba(255, 255, 255, 0.1);
+        background: #fff;
+    }
+    .count-point{
+        margin-bottom: 5px;
+        margin-left: 13px;
+        align-items: center;
+        display: flex;
+        height: 50px;
+        width: 318px;
+    }
+    .completed{
+        margin-right: 30px;
+        width: 95px;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 100%;
+        color: #4e4e4e;
+    }
+    .completed-count{
+        border: 1px solid #4e4e4e;
+        border-radius: 100px;
+        width: 188px;
+        height: 50px;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 100%;
+        color: #2a2a28;
+    }
+    .completed-count span{
+        margin: 16px;
+    }
+    .completed-count2{
+        border-radius: 100px;
+        width: 90px;
+        height: 50px;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 100%;
+        color: #2a2a28;
+        background: repeating-linear-gradient(
+            45deg, /* Наклон градиента */
+            #717630, /* Начальный цвет полос */
+            #717630 5px, /* Ширина полосы */
+            #797E30 5px, /* Начало цвета промежутка */
+            #797E30 20px /* Ширина промежутка */
+        );
+    }
+    .completed-count3{
+        border-radius: 100px;
+        width: 139px;
+        height: 50px;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 100%;
+        color: #2a2a28;
+        background: #b0b555;
+    }
+    .order{
+        border-radius: 10px;
+        width: 340px;
+        height: 220px;
+        box-shadow: 0 0 20px -3px rgba(255, 255, 255, 0.1);
+        background: #fff;
+    }
+    .order-name{
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 24px;
+        line-height: 100%;
+        color: #2a2a28;
+    }
+    .order-title{
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        width: 305px;
+        height: 20px;
+        margin-top: 28px;
+        margin-left: 20px;
+    }
+    .order-date{
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 140%;
+        color: #ff0035;
+    }
+    .order-cost{
+        margin-left: 20px;
+        margin-top: 10px;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 140%;
+        color: #a5a5a5;
+    }
+    .order-description{
+        margin-right: 13px;
+        margin-left: 15px;
+        margin-top: 25px;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 140%;
+        color: #a5a5a5;
+    }
+    .order-tags{
+        flex-wrap: wrap;
+        display: flex;
+        gap: 5px;
+        margin-top: 8px;
+        margin-right: 13px;
+        margin-left: 15px;
+        height: 49px;
+    }
+    .order-status{
+        border-radius: 10px;
+        padding: 0px 15px;
+        width: 68px;
+        height: 22px;
+        font-family: "Inter", sans-serif;
+        font-weight: 300;
+        font-size: 16px;
+        text-align: center;
+        color: #2a2a28;
+        background: #ffc2ce;
+    }
+    .order-upholstered-furniture{
+        font-weight: 300;
+        font-size: 16px;
+        text-align: center;
+        border-radius: 10px;
+        padding: 0px 15px;
+        font-family: "Inter", sans-serif;
+        height: 22px;
+        width: 117px;
+        color: #717630;
+        background: #d4d79c;
+    }
+    .order-production{
+        font-weight: 300;
+        font-size: 16px;
+        text-align: center;
+        border-radius: 10px;
+        padding: 0px 15px;
+        font-family: "Inter", sans-serif;
+        height: 22px;
+        color: #2a2a28;
+        background: #ccc;
+
+    }
+
 </style>
 
 <title>Дашборд</title>
@@ -143,5 +402,238 @@
     </div>
 </div>
 
+
+<div class="left-section">
+    <div class="newdivan-info">
+        <div class="title-block">Newdivan</div>
+        <div class="stats-block">
+            <div class="stat">
+                <div class="stat-title">
+                    Обороты
+                </div>
+                <div class="stat-info">
+                    54,947,200 ₽
+                </div>
+            </div>
+            <div class="stat">
+                <div class="stat-title">
+                    Заказы
+                </div>
+                <div class="stat-info">
+                    678
+                </div>
+            </div>
+            <div class="stat">
+                <div class="stat-title">
+                    Сотрудники
+                </div>
+                <div class="stat-info">
+                    37
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="turnover-graph">
+        <canvas id="myChart"></canvas>
+        <div class="graph-info">
+            <div class="turnover-info"><span>₽</span> 10,000,000.00 </div>
+            <div class="turnover-title">Обороты в месяц</div>
+        </div>
+    </div>
+    <div class="orders-block">
+        <div class="orders-count-info">
+            <div class="count-point" style="margin-top: 35px">
+                <div class="completed">Завершено</div>
+                <div class="completed-count">
+                    <div style="margin-top: 16px; margin-left: 16px">27</div>
+                </div>
+            </div>
+
+            <div class="count-point">
+                <div class="completed">В работе</div>
+                <div class="completed-count2">
+                    <div style="margin-top: 16px; margin-left: 16px">10</div>
+                </div>
+            </div>
+            <div class="count-point">
+                <div class="completed">В очереди</div>
+                <div class="completed-count3">
+                    <div style="margin-top: 16px; margin-left: 16px">20</div>
+                </div>
+            </div>
+        </div>
+        <div class="order">
+            <div class="order-title">
+                <div class="order-name">НД-335</div>
+                <div style="display: flex; gap: 7px">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M13.2611 14.6922L9.44444 10.8756V5.47H10.5556V10.43L14.0256 13.9L13.2611 14.6922ZM9.44444 3.33333V1.11111H10.5556V3.33333H9.44444ZM16.6667 10.5556V9.44444H18.8889V10.5556H16.6667ZM9.44444 18.8889V16.6667H10.5556V18.8889H9.44444ZM1.11111 10.5556V9.44444H3.33333V10.5556H1.11111ZM10.0033 20C8.62111 20 7.32111 19.7378 6.10333 19.2133C4.8863 18.6881 3.82741 17.9756 2.92667 17.0756C2.02593 16.1756 1.31296 15.1178 0.787778 13.9022C0.262593 12.6867 0 11.387 0 10.0033C0 8.61963 0.262222 7.31963 0.786666 6.10333C1.31111 4.88704 2.0237 3.82815 2.92444 2.92667C3.82518 2.02519 4.88296 1.31222 6.09778 0.787779C7.31259 0.263335 8.61222 0.000742306 9.99667 1.56495e-06C11.3811 -0.000739176 12.6811 0.261483 13.8967 0.786668C15.1122 1.31185 16.1711 2.02445 17.0733 2.92445C17.9756 3.82445 18.6885 4.88222 19.2122 6.09778C19.7359 7.31333 19.9985 8.61296 20 9.99667C20.0015 11.3804 19.7393 12.6804 19.2133 13.8967C18.6874 15.113 17.9748 16.1719 17.0756 17.0733C16.1763 17.9748 15.1185 18.6878 13.9022 19.2122C12.6859 19.7367 11.3863 19.9993 10.0033 20ZM10 18.8889C12.4815 18.8889 14.5833 18.0278 16.3056 16.3056C18.0278 14.5833 18.8889 12.4815 18.8889 10C18.8889 7.51852 18.0278 5.41667 16.3056 3.69445C14.5833 1.97222 12.4815 1.11111 10 1.11111C7.51852 1.11111 5.41667 1.97222 3.69444 3.69445C1.97222 5.41667 1.11111 7.51852 1.11111 10C1.11111 12.4815 1.97222 14.5833 3.69444 16.3056C5.41667 18.0278 7.51852 18.8889 10 18.8889Z" fill="#FF0035" />
+                    </svg>
+                    <div class="order-date">9.11.2023</div>
+                </div>
+
+            </div>
+            <div class="order-cost">115,000 ₽</div>
+            <div class="order-description">Перетяжка дивана, реставрация морилкой царапин частично</div>
+            <div class="order-tags">
+                <div class="order-status">
+                    в работе
+                </div>
+                <div class="order-upholstered-furniture">
+                    мягкая мебель
+                </div>
+                <div class="order-production">
+                    изготовление
+                </div>
+            </div>
+        </div>
+
+        <div class="order">
+            <div class="order-title">
+                <div class="order-name">НД-335</div>
+                <div style="display: flex; gap: 7px">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M13.2611 14.6922L9.44444 10.8756V5.47H10.5556V10.43L14.0256 13.9L13.2611 14.6922ZM9.44444 3.33333V1.11111H10.5556V3.33333H9.44444ZM16.6667 10.5556V9.44444H18.8889V10.5556H16.6667ZM9.44444 18.8889V16.6667H10.5556V18.8889H9.44444ZM1.11111 10.5556V9.44444H3.33333V10.5556H1.11111ZM10.0033 20C8.62111 20 7.32111 19.7378 6.10333 19.2133C4.8863 18.6881 3.82741 17.9756 2.92667 17.0756C2.02593 16.1756 1.31296 15.1178 0.787778 13.9022C0.262593 12.6867 0 11.387 0 10.0033C0 8.61963 0.262222 7.31963 0.786666 6.10333C1.31111 4.88704 2.0237 3.82815 2.92444 2.92667C3.82518 2.02519 4.88296 1.31222 6.09778 0.787779C7.31259 0.263335 8.61222 0.000742306 9.99667 1.56495e-06C11.3811 -0.000739176 12.6811 0.261483 13.8967 0.786668C15.1122 1.31185 16.1711 2.02445 17.0733 2.92445C17.9756 3.82445 18.6885 4.88222 19.2122 6.09778C19.7359 7.31333 19.9985 8.61296 20 9.99667C20.0015 11.3804 19.7393 12.6804 19.2133 13.8967C18.6874 15.113 17.9748 16.1719 17.0756 17.0733C16.1763 17.9748 15.1185 18.6878 13.9022 19.2122C12.6859 19.7367 11.3863 19.9993 10.0033 20ZM10 18.8889C12.4815 18.8889 14.5833 18.0278 16.3056 16.3056C18.0278 14.5833 18.8889 12.4815 18.8889 10C18.8889 7.51852 18.0278 5.41667 16.3056 3.69445C14.5833 1.97222 12.4815 1.11111 10 1.11111C7.51852 1.11111 5.41667 1.97222 3.69444 3.69445C1.97222 5.41667 1.11111 7.51852 1.11111 10C1.11111 12.4815 1.97222 14.5833 3.69444 16.3056C5.41667 18.0278 7.51852 18.8889 10 18.8889Z" fill="#FF0035" />
+                    </svg>
+                    <div class="order-date">9.11.2023</div>
+                </div>
+
+            </div>
+            <div class="order-cost">115,000 ₽</div>
+            <div class="order-description">Перетяжка дивана, реставрация морилкой царапин частично</div>
+            <div class="order-tags">
+                <div class="order-status">
+                    в работе
+                </div>
+                <div class="order-upholstered-furniture">
+                    мягкая мебель
+                </div>
+                <div class="order-production">
+                    изготовление
+                </div>
+            </div>
+        </div>
+
+        <div class="order">
+            <div class="order-title">
+                <div class="order-name">НД-335</div>
+                <div style="display: flex; gap: 7px">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M13.2611 14.6922L9.44444 10.8756V5.47H10.5556V10.43L14.0256 13.9L13.2611 14.6922ZM9.44444 3.33333V1.11111H10.5556V3.33333H9.44444ZM16.6667 10.5556V9.44444H18.8889V10.5556H16.6667ZM9.44444 18.8889V16.6667H10.5556V18.8889H9.44444ZM1.11111 10.5556V9.44444H3.33333V10.5556H1.11111ZM10.0033 20C8.62111 20 7.32111 19.7378 6.10333 19.2133C4.8863 18.6881 3.82741 17.9756 2.92667 17.0756C2.02593 16.1756 1.31296 15.1178 0.787778 13.9022C0.262593 12.6867 0 11.387 0 10.0033C0 8.61963 0.262222 7.31963 0.786666 6.10333C1.31111 4.88704 2.0237 3.82815 2.92444 2.92667C3.82518 2.02519 4.88296 1.31222 6.09778 0.787779C7.31259 0.263335 8.61222 0.000742306 9.99667 1.56495e-06C11.3811 -0.000739176 12.6811 0.261483 13.8967 0.786668C15.1122 1.31185 16.1711 2.02445 17.0733 2.92445C17.9756 3.82445 18.6885 4.88222 19.2122 6.09778C19.7359 7.31333 19.9985 8.61296 20 9.99667C20.0015 11.3804 19.7393 12.6804 19.2133 13.8967C18.6874 15.113 17.9748 16.1719 17.0756 17.0733C16.1763 17.9748 15.1185 18.6878 13.9022 19.2122C12.6859 19.7367 11.3863 19.9993 10.0033 20ZM10 18.8889C12.4815 18.8889 14.5833 18.0278 16.3056 16.3056C18.0278 14.5833 18.8889 12.4815 18.8889 10C18.8889 7.51852 18.0278 5.41667 16.3056 3.69445C14.5833 1.97222 12.4815 1.11111 10 1.11111C7.51852 1.11111 5.41667 1.97222 3.69444 3.69445C1.97222 5.41667 1.11111 7.51852 1.11111 10C1.11111 12.4815 1.97222 14.5833 3.69444 16.3056C5.41667 18.0278 7.51852 18.8889 10 18.8889Z" fill="#FF0035" />
+                    </svg>
+                    <div class="order-date">9.11.2023</div>
+                </div>
+
+            </div>
+            <div class="order-cost">115,000 ₽</div>
+            <div class="order-description">Перетяжка дивана, реставрация морилкой царапин частично</div>
+            <div class="order-tags">
+                <div class="order-status">
+                    в работе
+                </div>
+                <div class="order-upholstered-furniture">
+                    мягкая мебель
+                </div>
+                <div class="order-production">
+                    изготовление
+                </div>
+            </div>
+        </div>
+
+        <div class="order">
+            <div class="order-title">
+                <div class="order-name">НД-335</div>
+                <div style="display: flex; gap: 7px">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M13.2611 14.6922L9.44444 10.8756V5.47H10.5556V10.43L14.0256 13.9L13.2611 14.6922ZM9.44444 3.33333V1.11111H10.5556V3.33333H9.44444ZM16.6667 10.5556V9.44444H18.8889V10.5556H16.6667ZM9.44444 18.8889V16.6667H10.5556V18.8889H9.44444ZM1.11111 10.5556V9.44444H3.33333V10.5556H1.11111ZM10.0033 20C8.62111 20 7.32111 19.7378 6.10333 19.2133C4.8863 18.6881 3.82741 17.9756 2.92667 17.0756C2.02593 16.1756 1.31296 15.1178 0.787778 13.9022C0.262593 12.6867 0 11.387 0 10.0033C0 8.61963 0.262222 7.31963 0.786666 6.10333C1.31111 4.88704 2.0237 3.82815 2.92444 2.92667C3.82518 2.02519 4.88296 1.31222 6.09778 0.787779C7.31259 0.263335 8.61222 0.000742306 9.99667 1.56495e-06C11.3811 -0.000739176 12.6811 0.261483 13.8967 0.786668C15.1122 1.31185 16.1711 2.02445 17.0733 2.92445C17.9756 3.82445 18.6885 4.88222 19.2122 6.09778C19.7359 7.31333 19.9985 8.61296 20 9.99667C20.0015 11.3804 19.7393 12.6804 19.2133 13.8967C18.6874 15.113 17.9748 16.1719 17.0756 17.0733C16.1763 17.9748 15.1185 18.6878 13.9022 19.2122C12.6859 19.7367 11.3863 19.9993 10.0033 20ZM10 18.8889C12.4815 18.8889 14.5833 18.0278 16.3056 16.3056C18.0278 14.5833 18.8889 12.4815 18.8889 10C18.8889 7.51852 18.0278 5.41667 16.3056 3.69445C14.5833 1.97222 12.4815 1.11111 10 1.11111C7.51852 1.11111 5.41667 1.97222 3.69444 3.69445C1.97222 5.41667 1.11111 7.51852 1.11111 10C1.11111 12.4815 1.97222 14.5833 3.69444 16.3056C5.41667 18.0278 7.51852 18.8889 10 18.8889Z" fill="#FF0035" />
+                    </svg>
+                    <div class="order-date">9.11.2023</div>
+                </div>
+
+            </div>
+            <div class="order-cost">115,000 ₽</div>
+            <div class="order-description">Перетяжка дивана, реставрация морилкой царапин частично</div>
+            <div class="order-tags">
+                <div class="order-status">
+                    в работе
+                </div>
+                <div class="order-upholstered-furniture">
+                    мягкая мебель
+                </div>
+                <div class="order-production">
+                    изготовление
+                </div>
+            </div>
+        </div>
+
+        <div class="order">
+            <div class="order-title">
+                <div class="order-name">НД-335</div>
+                <div style="display: flex; gap: 7px">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M13.2611 14.6922L9.44444 10.8756V5.47H10.5556V10.43L14.0256 13.9L13.2611 14.6922ZM9.44444 3.33333V1.11111H10.5556V3.33333H9.44444ZM16.6667 10.5556V9.44444H18.8889V10.5556H16.6667ZM9.44444 18.8889V16.6667H10.5556V18.8889H9.44444ZM1.11111 10.5556V9.44444H3.33333V10.5556H1.11111ZM10.0033 20C8.62111 20 7.32111 19.7378 6.10333 19.2133C4.8863 18.6881 3.82741 17.9756 2.92667 17.0756C2.02593 16.1756 1.31296 15.1178 0.787778 13.9022C0.262593 12.6867 0 11.387 0 10.0033C0 8.61963 0.262222 7.31963 0.786666 6.10333C1.31111 4.88704 2.0237 3.82815 2.92444 2.92667C3.82518 2.02519 4.88296 1.31222 6.09778 0.787779C7.31259 0.263335 8.61222 0.000742306 9.99667 1.56495e-06C11.3811 -0.000739176 12.6811 0.261483 13.8967 0.786668C15.1122 1.31185 16.1711 2.02445 17.0733 2.92445C17.9756 3.82445 18.6885 4.88222 19.2122 6.09778C19.7359 7.31333 19.9985 8.61296 20 9.99667C20.0015 11.3804 19.7393 12.6804 19.2133 13.8967C18.6874 15.113 17.9748 16.1719 17.0756 17.0733C16.1763 17.9748 15.1185 18.6878 13.9022 19.2122C12.6859 19.7367 11.3863 19.9993 10.0033 20ZM10 18.8889C12.4815 18.8889 14.5833 18.0278 16.3056 16.3056C18.0278 14.5833 18.8889 12.4815 18.8889 10C18.8889 7.51852 18.0278 5.41667 16.3056 3.69445C14.5833 1.97222 12.4815 1.11111 10 1.11111C7.51852 1.11111 5.41667 1.97222 3.69444 3.69445C1.97222 5.41667 1.11111 7.51852 1.11111 10C1.11111 12.4815 1.97222 14.5833 3.69444 16.3056C5.41667 18.0278 7.51852 18.8889 10 18.8889Z" fill="#FF0035" />
+                    </svg>
+                    <div class="order-date">9.11.2023</div>
+                </div>
+
+            </div>
+            <div class="order-cost">115,000 ₽</div>
+            <div class="order-description">Перетяжка дивана, реставрация морилкой царапин частично</div>
+            <div class="order-tags">
+                <div class="order-status">
+                    в работе
+                </div>
+                <div class="order-upholstered-furniture">
+                    мягкая мебель
+                </div>
+                <div class="order-production">
+                    изготовление
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        datasets: [{
+            label: 'Обороты',
+            data: [1200000, 1900000, 300000, 500000, 2000000, 3000000, 200000, 150000, 250000],
+            backgroundColor: 'rgba(208, 214, 106, 0.5)',
+            borderColor: '#d0d66a',
+            borderWidth: 1,
+            tension: 0.4, // Добавляет скругление к линии графика
+            borderCapStyle: 'round' // Делает концы линии скругленными
+        }]
+    },
+    options: {
+        responsive: true, // График будет реагировать на изменение размеров контейнера
+        maintainAspectRatio: false, // Позволяет графику изменять высоту в ответ на изменения ширины
+        scales: {
+            x: { display: false },
+            y: { display: false }
+        },
+        plugins: {
+            legend: { display: false }
+        },
+        layout: {
+            padding: {
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0
+            }
+        }
+    }
+});
+</script>
 
 {% endblock %}
