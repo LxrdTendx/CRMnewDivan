@@ -9,6 +9,7 @@ urlpatterns = [
     path('orders/', views.orders_view, name='orders'),
     path('active/', views.active_view, name='active'),
     path('staff/', views.staff_view, name='staff'),
+
 ]
 
 # Добавление маршрутов для обслуживания медиа-файлов в режиме разработки
