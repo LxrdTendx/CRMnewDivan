@@ -248,13 +248,13 @@
     .add-new-order{
         align-self: flex-end;
     }
-    .add-new-order button{
+    .add-new-order a{
+        padding-left: 25px;
+        padding-right: 25px;
         gap: 25px;
-        padding: 25px;
         cursor: pointer;
         border: none;
         border-radius: 15px;
-        width: 339px;
         height: 50px;
         backdrop-filter: blur(50px);
         box-shadow: inset 0 0 20px -3px rgba(255, 255, 255, 0.1);
@@ -399,13 +399,20 @@
     .avatar:first-child {
         right: 0;
     }
+    .add-new-order a{
+        transition: all 0.3s;
+    }
+    .add-new-order a:hover{
+        background: #2a2a28;
+        border: none;
+    }
     
     
     @media (max-width: 1400px) {
         .button-text {
             display: none;
         }
-        .add-new-order button{
+        .add-new-order a{
             width: 75px;
         }
     }
@@ -464,7 +471,7 @@
             <div class="sorting-panel-pt">
                 <div class="panel-pt">Поиск по заказам</div>
                 <label>
-                    <input type="text" placeholder="НД-1">
+                    <input style="color: #2a2a28;" type="text" placeholder="НД-1">
                 </label>
             </div>
 
@@ -509,12 +516,12 @@
         </div>
 
         <div class="add-new-order">
-            <button style="display: flex; align-items: center">
+            <a href="{% url 'add_order' %}" style="display: flex; align-items: center">
                 <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M11.4583 13.5417H1.04167C0.745833 13.5417 0.498611 13.4417 0.3 13.2417C0.1 13.0417 0 12.7944 0 12.5C0 12.2056 0.1 11.9583 0.3 11.7583C0.5 11.5583 0.747222 11.459 1.04167 11.4604H11.4583V1.04375C11.4583 0.747916 11.5583 0.500694 11.7583 0.302083C11.9583 0.100694 12.2056 0 12.5 0C12.7944 0 13.0417 0.1 13.2417 0.3C13.4417 0.5 13.541 0.747222 13.5396 1.04167V11.4583H23.9563C24.2521 11.4583 24.4993 11.5583 24.6979 11.7583C24.8979 11.9583 24.9979 12.2063 24.9979 12.5021C24.9979 12.7979 24.8979 13.0451 24.6979 13.2438C24.4979 13.4424 24.2507 13.5417 23.9563 13.5417H13.5396V23.9583C13.5396 24.2542 13.4396 24.5014 13.2396 24.7C13.041 24.9 12.7944 25 12.5 25C12.2056 25 11.9583 24.9 11.7583 24.7C11.5583 24.5 11.459 24.2528 11.4604 23.9583L11.4583 13.5417Z" fill="white" />
                 </svg>
                 <span class="button-text">Добавить новый заказ</span>
-            </button>
+            </a>
         </div>
     </div>
 </div>
@@ -535,7 +542,7 @@
                 <th style="width: 15.5%">Описание</th>
                 <th style="width: 11.17%">Ответственные</th>
                 <th style="width: 11.23%">Оплата</th>
-                <th style="width: 11.23%">Статус</th>
+                <th style="width: 12.23%">Статус</th>
                 <th></th>
             </tr>
         </thead>
