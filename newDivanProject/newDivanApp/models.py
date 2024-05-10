@@ -38,8 +38,8 @@ class Employee(models.Model):
     )
  
     SALARY_CHOICES = (
-        ('fixed', "Фиксированная"),
-        ('not_fixed', "Сдельная")
+        ('fixed', "Фиксированный"),
+        ('not_fixed', "Сдельный")
     )
 
     first_name = models.CharField(max_length=100, verbose_name="Имя")
@@ -140,7 +140,7 @@ class TechnicalSpecification(models.Model):
         ('cabinet', 'Корпусная мебель'),
     )
 
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name="Заказ")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name="Заказ", related_name="technical_specifications")
     items_qty = models.PositiveIntegerField(verbose_name="Кол-во изделий")
     short_descr = models.CharField(max_length=100, verbose_name="Краткое описание ТЗ")
     full_descr = models.TextField(verbose_name="Полное описание ТЗ", default='', blank=True)
@@ -291,7 +291,7 @@ class PickupDelivery(models.Model):
         ('delivery', 'Доставляет курьер')
     )
 
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name="Заказ")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name="Заказ", related_name="pickupdelivery_set")
     is_picked = models.BooleanField(default=False, verbose_name="Забран")
     pickup_type = models.CharField(max_length=50, verbose_name="Тип забора", choices=PICKUP_TYPES)
     # estimated_pickup_date = models.DateField(verbose_name="Планируемая дата забора", null=True, blank=True) # убрала поле
@@ -383,6 +383,8 @@ class Contract(models.Model):
     postpayment_date = models.DateField(verbose_name="Дата оплаты", blank=True, null=True)
     is_postpayment_paid = models.BooleanField(default=False, verbose_name="Оплата произведена")
     comments = models.TextField(verbose_name="Комментарии к договору", default='', null=True, blank=True)
+
+
 
     class Meta:
         verbose_name = "Договор"

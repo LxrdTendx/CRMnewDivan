@@ -444,7 +444,7 @@
         color: #ff0035;
     }
     .probation{
-        width: 155px;
+        width: 157px;
         border-radius: 15px;
         padding: 0px 15px;
         background: #ccc;
@@ -549,9 +549,9 @@
                 <div class="panel-pt">Статус</div>
                 <select name="status">
                     <option value="">Все</option>
-                    <option value="working">работает</option>
-                    <option value="not_working">уволен</option>
-                    <option value="probation">испытательный срок</option>
+                    <option value="working">Работает</option>
+                    <option value="not_working">Уволен</option>
+                    <option value="probation">Испытательный срок</option>
                 </select>
             </div>
 
@@ -569,8 +569,8 @@
                 <div class="panel-pt">Оплата</div>
                 <select name="payment_type">
                     <option value="">Все</option>
-                    <option value="fixed">фиксированный</option>
-                    <option value="not_fixed">сдельный</option>
+                    <option value="fixed">Фиксированный</option>
+                    <option value="not_fixed">Сдельный</option>
                 </select>
             </div>
         </div>
@@ -666,18 +666,18 @@ $(document).ready(function() {
                         var formattedDate = new Date(employee.employment_date).toLocaleDateString('ru-RU');
                         var statusClass = employee.status;
                         var typeSalary = employee.type_salary;
-                        if (employee.type_salary === "фиксированный") {
+                        if (employee.type_salary === "Фиксированный") {
                             typeSalary = "fixed"
-                        } else if (employee.type_salary === "сдельный") {
+                        } else if (employee.type_salary === "Сдельный") {
                             typeSalary = "not_fixed"
                         }
 
 
-                        if (employee.status === "работает") {
+                        if (employee.status === "Работает") {
                             statusClass = "working";
-                        } else if (employee.status === "уволен") {
+                        } else if (employee.status === "Уволен") {
                             statusClass = "not_working";
-                        } else if (employee.status === "испытательный срок") {
+                        } else if (employee.status === "Испытательный срок") {
                             statusClass = "probation";
                         }
 
