@@ -555,34 +555,6 @@
             </tr>
         </thead>
         <tbody>
-<!--            {% for order in orders %}-->
-<!--            <tr>-->
-<!--                <td>{{ order.number }}</td>-->
-<!--                <td>{{ order.contract.create_date|date:"d.m.Y" }}</td>-->
-<!--                <td>{{ order.contract.completion_date|date:"d.m.Y" }}</td>-->
-<!--                <td>{{ order.contract.total_value|floatformat:"2"|intcomma|safe|cut:"." }} ₽</td>-->
-<!--                <td>{{ order.technical_specifications.first.get_furniture_type1_display }}</td>-->
-<!--                <td>{{ order.technical_specifications.first.short_descr }}</td>-->
-<!--                <td>-->
-<!--                    <div class="avatars">-->
-<!--                        {% if order.executor1 %}-->
-<!--                        <img src="{{ order.executor1.avatar.url }}" alt="{{ order.executor1 }}" class="avatar">-->
-<!--                        {% endif %}-->
-<!--                        {% if order.executor2 %}-->
-<!--                        <img src="{{ order.executor2.avatar.url }}" alt="{{ order.executor2 }}" class="avatar">-->
-<!--                        {% endif %}-->
-<!--                        {% if order.executor3 %}-->
-<!--                        <img src="{{ order.executor3.avatar.url }}" alt="{{ order.executor3 }}" class="avatar">-->
-<!--                        {% endif %}-->
-<!--                    </div>-->
-<!--                </td>-->
-<!--                <td>{% if order.contract.is_balance_paid %}Оплачен{% else %}Не оплачен{% endif %}</td>-->
-<!--                <td>{{ order.get_status_display }}</td>-->
-<!--                <td>-->
-<!--                    &lt;!&ndash; Иконки управления &ndash;&gt;-->
-<!--                </td>-->
-<!--            </tr>-->
-<!--            {% endfor %}-->
         </tbody>
     </table>
 </div>
