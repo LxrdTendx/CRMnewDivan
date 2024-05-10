@@ -192,6 +192,16 @@
         background: #2a2a28;
         border: none;
     }
+    .order-name{
+        padding: 0;
+        width: 50%;
+        background: none;
+        border: none;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 36px;
+        color: #2a2a28;
+    }
 
 
 
@@ -237,6 +247,14 @@
 
 <div class="order-create">
      <a class="bact-to-orders" href="{% url 'orders' %}">Назад ко всем заказам</a>
+    <form id="employeeCreationForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div style="justify-content: space-between; display: flex">
+            <!-- ФИО сотрудника как поле ввода -->
+            <input type="text" name="order_name" class="order-name" placeholder="Введите НОМЕР заказа" required style="border-radius: 5px">
+
+        </div>
+    </form>
 </div>
 
 

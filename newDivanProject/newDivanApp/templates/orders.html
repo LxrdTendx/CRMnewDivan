@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 {% block content %}
 <style>
     body{
@@ -176,7 +177,7 @@
         padding: 0 14px;
         border: 1px solid #a5a5a5;
         border-radius: 15px;
-        width: 220px;
+        width: auto;
         height: 50px;
         backdrop-filter: blur(50px);
         box-shadow: inset 0 0 20px -3px rgba(255, 255, 255, 0.1);
@@ -391,9 +392,8 @@
         width: 50px; /* Установите нужный размер */
         height: 50px; /* Установите нужный размер */
         border-radius: 50%; /* Делает изображения круглыми */
-        border: 2px solid white; /* Белая граница для отделения изображений друг от друга */
         position: relative;
-        right: 10px; /* Смещение каждого последующего аватара налево */
+        margin-left: -10px;
     }
 
     .avatar:first-child {
@@ -408,13 +408,11 @@
     }
     
     
-    @media (max-width: 1400px) {
+    @media (max-width: 1500px) {
         .button-text {
             display: none;
         }
-        .add-new-order a{
-            width: 75px;
-        }
+
     }
 
     
@@ -462,7 +460,7 @@
 
 <div class="title-page">
     <div class="title-page-base">База данных заказов</div>
-    <div class="count-orders">687 за все время</div>
+    <div class="count-orders"> за все время</div>
 </div>
 
 <div class="sorting-block">
@@ -471,34 +469,44 @@
             <div class="sorting-panel-pt">
                 <div class="panel-pt">Поиск по заказам</div>
                 <label>
-                    <input style="color: #2a2a28;" type="text" placeholder="НД-1">
+                    <input name="search_query" style="color: #2a2a28;" type="text" placeholder="НД-1">
                 </label>
             </div>
 
             <div class="sorting-panel-pt">
                 <div class="panel-pt">Статус</div>
-                <select>
-                    <option>Все</option>
-                    <option>Активные</option>
-                    <option>Завершенные</option>
+                <select name="status">
+                    <option value="">Все</option>
+                    <option value="registered">Заказ зарегистрирован</option>
+                    <option value="to_pickup">Необходимо забрать</option>
+                    <option value="is_picked">Заказ привезли</option>
+                    <option value="to_do">В очереди</option>
+                    <option value="in_progress">Взято в работу</option>
+                    <option value="in_review">Ждет проверки управляющего</option>
+                    <option value="closed">Выполнено успешно</option>
+                    <option value="suspended">Приостановлено</option>
+                    <option value="to_deliver">Необходима доставка</option>
+                    <option value="delivered">Доставлено клиенту</option>
                 </select>
             </div>
 
             <div class="sorting-panel-pt">
                 <div class="panel-pt">Тип заказа</div>
-                <select>
-                    <option>Все</option>
-                    <option>Производство</option>
-                    <option>Доставка</option>
+                <select name="type">
+                    <option value="">Все</option>
+                    <option value="soft">Мягкая мебель</option>
+                    <option value="cabinet">Корпусная мебель</option>
                 </select>
             </div>
 
             <div class="sorting-panel-pt">
                 <div class="panel-pt">Оплата</div>
-                <select>
-                    <option>Все</option>
-                    <option>Оплачено</option>
-                    <option>Не оплачено</option>
+                <select name="payment_status">
+                    <option value="">Все</option>
+                    <option value="awaiting_prepayment">Ожидает предоплаты</option>
+                    <option value="prepayment_made">Внесена предоплата</option>
+                    <option value="awaiting_payment">Ожидает оплаты</option>
+                    <option value="payment_done">Оплата произведена</option>
                 </select>
             </div>
 
@@ -529,7 +537,7 @@
 <div class="orders-table">
     <div style="display: flex; margin-left: 20px; align-items: center; gap: 8px">
         <div class="orders-text">Заказы</div>
-        <div class="sort-count-orders">31 результат</div>
+        <div class="sort-count-orders"> результат</div>
     </div>
     <table>
         <thead>
@@ -542,167 +550,39 @@
                 <th style="width: 15.5%">Описание</th>
                 <th style="width: 11.17%">Ответственные</th>
                 <th style="width: 11.23%">Оплата</th>
-                <th style="width: 12.23%">Статус</th>
+                <th style="width: 9%">Статус</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <!-- Пример строки таблицы -->
-            <tr>
-                <td>НД-335</td>
-                <td>15.10.2023</td>
-                <td>9.11.2023</td>
-                <td>100,000 ₽</td>
-                <td>Мягкая мебель</td>
-                <td>Изготовление пуфиков</td>
-                <td>
-                    <div class="avatars">
-                        <img src="path_to_avatar1.jpg" alt="Ответственный 1" class="avatar" >
-                        <img src="path_to_avatar2.jpg" alt="Ответственный 2" class="avatar">
-                    </div>
-                </td>
-                <td>Оплачен вовремя</td>
-                <td>Ждет проверки управляющего</td>
-                <th style="gap: 20px; display: flex; align-items: center">
-                    <svg width="34" height="31" viewBox="0 0 34 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M0 19.6667V17.5833H14.5833V19.6667H0ZM0 11.3333V9.25H22.9167V11.3333H0ZM0 3V0.916668H22.9167V3H0ZM17.1458 30.0833V25.4792L28.2562 14.4229C28.4632 14.2424 28.6757 14.1104 28.8937 14.0271C29.1118 13.9438 29.3306 13.9007 29.55 13.8979C29.7889 13.8979 30.0236 13.9424 30.2542 14.0313C30.4833 14.1215 30.6924 14.2556 30.8812 14.4333L32.8083 16.4021C32.9792 16.6076 33.1097 16.8208 33.2 17.0417C33.2903 17.2625 33.3347 17.4847 33.3333 17.7083C33.3319 17.9319 33.2958 18.1556 33.225 18.3792C33.1542 18.6028 33.0153 18.8181 32.8083 19.025L21.75 30.0833H17.1458ZM29.5625 19.6979L31.4896 17.7083L29.5625 15.7396L27.5833 17.7188L29.5625 19.6979Z" fill="#4E4E4E" />
-                    </svg>
-                    <svg width="27" height="31" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12.6987 21.5742H14.6011V12.6541L18.596 16.6281L19.9429 15.2812L13.6499 8.98827L7.35696 15.2812L8.70382 16.6281L12.6987 12.6541V21.5742ZM5.30813 30.5C4.43305 30.5 3.70255 30.207 3.11663 29.6211C2.53071 29.0352 2.23711 28.3041 2.23584 27.4277V3.86715H0.333496V1.96481H7.94288V0.5H19.357V1.96481H26.9663V3.86715H25.064V27.4277C25.064 28.3028 24.771 29.0333 24.1851 29.6192C23.5992 30.2051 22.8681 30.4987 21.9917 30.5H5.30813Z" fill="#4E4E4E" />
-                    </svg>
-
-                </th>
-            </tr>
-
-            <tr>
-                <td>НД-335</td>
-                <td>15.10.2023</td>
-                <td>9.11.2023</td>
-                <td>100,000 ₽</td>
-                <td>Мягкая мебель</td>
-                <td>Изготовление пуфиков</td>
-                <td>
-                    <div class="avatars">
-                        <img src="path_to_avatar1.jpg" alt="Ответственный 1" class="avatar" >
-                        <img src="path_to_avatar2.jpg" alt="Ответственный 2" class="avatar">
-                    </div>
-                </td>
-                <td>Оплачен вовремя</td>
-                <td>Ждет проверки управляющего</td>
-                <th style="gap: 20px; display: flex; align-items: center">
-                    <svg width="34" height="31" viewBox="0 0 34 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M0 19.6667V17.5833H14.5833V19.6667H0ZM0 11.3333V9.25H22.9167V11.3333H0ZM0 3V0.916668H22.9167V3H0ZM17.1458 30.0833V25.4792L28.2562 14.4229C28.4632 14.2424 28.6757 14.1104 28.8937 14.0271C29.1118 13.9438 29.3306 13.9007 29.55 13.8979C29.7889 13.8979 30.0236 13.9424 30.2542 14.0313C30.4833 14.1215 30.6924 14.2556 30.8812 14.4333L32.8083 16.4021C32.9792 16.6076 33.1097 16.8208 33.2 17.0417C33.2903 17.2625 33.3347 17.4847 33.3333 17.7083C33.3319 17.9319 33.2958 18.1556 33.225 18.3792C33.1542 18.6028 33.0153 18.8181 32.8083 19.025L21.75 30.0833H17.1458ZM29.5625 19.6979L31.4896 17.7083L29.5625 15.7396L27.5833 17.7188L29.5625 19.6979Z" fill="#4E4E4E" />
-                    </svg>
-                    <svg width="27" height="31" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12.6987 21.5742H14.6011V12.6541L18.596 16.6281L19.9429 15.2812L13.6499 8.98827L7.35696 15.2812L8.70382 16.6281L12.6987 12.6541V21.5742ZM5.30813 30.5C4.43305 30.5 3.70255 30.207 3.11663 29.6211C2.53071 29.0352 2.23711 28.3041 2.23584 27.4277V3.86715H0.333496V1.96481H7.94288V0.5H19.357V1.96481H26.9663V3.86715H25.064V27.4277C25.064 28.3028 24.771 29.0333 24.1851 29.6192C23.5992 30.2051 22.8681 30.4987 21.9917 30.5H5.30813Z" fill="#4E4E4E" />
-                    </svg>
-
-                </th>
-            </tr>
-
-            <tr>
-                <td>НД-335</td>
-                <td>15.10.2023</td>
-                <td>9.11.2023</td>
-                <td>100,000 ₽</td>
-                <td>Мягкая мебель</td>
-                <td>Изготовление пуфиков</td>
-                <td>
-                    <div class="avatars">
-                        <img src="path_to_avatar1.jpg" alt="Ответственный 1" class="avatar" >
-                        <img src="path_to_avatar2.jpg" alt="Ответственный 2" class="avatar">
-                    </div>
-                </td>
-                <td>Оплачен вовремя</td>
-                <td>Ждет проверки управляющего</td>
-                <th style="gap: 20px; display: flex; align-items: center">
-                    <svg width="34" height="31" viewBox="0 0 34 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M0 19.6667V17.5833H14.5833V19.6667H0ZM0 11.3333V9.25H22.9167V11.3333H0ZM0 3V0.916668H22.9167V3H0ZM17.1458 30.0833V25.4792L28.2562 14.4229C28.4632 14.2424 28.6757 14.1104 28.8937 14.0271C29.1118 13.9438 29.3306 13.9007 29.55 13.8979C29.7889 13.8979 30.0236 13.9424 30.2542 14.0313C30.4833 14.1215 30.6924 14.2556 30.8812 14.4333L32.8083 16.4021C32.9792 16.6076 33.1097 16.8208 33.2 17.0417C33.2903 17.2625 33.3347 17.4847 33.3333 17.7083C33.3319 17.9319 33.2958 18.1556 33.225 18.3792C33.1542 18.6028 33.0153 18.8181 32.8083 19.025L21.75 30.0833H17.1458ZM29.5625 19.6979L31.4896 17.7083L29.5625 15.7396L27.5833 17.7188L29.5625 19.6979Z" fill="#4E4E4E" />
-                    </svg>
-                    <svg width="27" height="31" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12.6987 21.5742H14.6011V12.6541L18.596 16.6281L19.9429 15.2812L13.6499 8.98827L7.35696 15.2812L8.70382 16.6281L12.6987 12.6541V21.5742ZM5.30813 30.5C4.43305 30.5 3.70255 30.207 3.11663 29.6211C2.53071 29.0352 2.23711 28.3041 2.23584 27.4277V3.86715H0.333496V1.96481H7.94288V0.5H19.357V1.96481H26.9663V3.86715H25.064V27.4277C25.064 28.3028 24.771 29.0333 24.1851 29.6192C23.5992 30.2051 22.8681 30.4987 21.9917 30.5H5.30813Z" fill="#4E4E4E" />
-                    </svg>
-
-                </th>
-            </tr>
-
-            <tr>
-                <td>НД-335</td>
-                <td>15.10.2023</td>
-                <td>9.11.2023</td>
-                <td>100,000 ₽</td>
-                <td>Мягкая мебель</td>
-                <td>Изготовление пуфиков</td>
-                <td>
-                    <div class="avatars">
-                        <img src="path_to_avatar1.jpg" alt="Ответственный 1" class="avatar" >
-                        <img src="path_to_avatar2.jpg" alt="Ответственный 2" class="avatar">
-                    </div>
-                </td>
-                <td>Оплачен вовремя</td>
-                <td>Ждет проверки управляющего</td>
-                <th style="gap: 20px; display: flex; align-items: center">
-                    <svg width="34" height="31" viewBox="0 0 34 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M0 19.6667V17.5833H14.5833V19.6667H0ZM0 11.3333V9.25H22.9167V11.3333H0ZM0 3V0.916668H22.9167V3H0ZM17.1458 30.0833V25.4792L28.2562 14.4229C28.4632 14.2424 28.6757 14.1104 28.8937 14.0271C29.1118 13.9438 29.3306 13.9007 29.55 13.8979C29.7889 13.8979 30.0236 13.9424 30.2542 14.0313C30.4833 14.1215 30.6924 14.2556 30.8812 14.4333L32.8083 16.4021C32.9792 16.6076 33.1097 16.8208 33.2 17.0417C33.2903 17.2625 33.3347 17.4847 33.3333 17.7083C33.3319 17.9319 33.2958 18.1556 33.225 18.3792C33.1542 18.6028 33.0153 18.8181 32.8083 19.025L21.75 30.0833H17.1458ZM29.5625 19.6979L31.4896 17.7083L29.5625 15.7396L27.5833 17.7188L29.5625 19.6979Z" fill="#4E4E4E" />
-                    </svg>
-                    <svg width="27" height="31" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12.6987 21.5742H14.6011V12.6541L18.596 16.6281L19.9429 15.2812L13.6499 8.98827L7.35696 15.2812L8.70382 16.6281L12.6987 12.6541V21.5742ZM5.30813 30.5C4.43305 30.5 3.70255 30.207 3.11663 29.6211C2.53071 29.0352 2.23711 28.3041 2.23584 27.4277V3.86715H0.333496V1.96481H7.94288V0.5H19.357V1.96481H26.9663V3.86715H25.064V27.4277C25.064 28.3028 24.771 29.0333 24.1851 29.6192C23.5992 30.2051 22.8681 30.4987 21.9917 30.5H5.30813Z" fill="#4E4E4E" />
-                    </svg>
-
-                </th>
-            </tr>
-
-            <tr>
-                <td>НД-335</td>
-                <td>15.10.2023</td>
-                <td>9.11.2023</td>
-                <td>100,000 ₽</td>
-                <td>Мягкая мебель</td>
-                <td>Изготовление пуфиков</td>
-                <td>
-                    <div class="avatars">
-                        <img src="path_to_avatar1.jpg" alt="Ответственный 1" class="avatar" >
-                        <img src="path_to_avatar2.jpg" alt="Ответственный 2" class="avatar">
-                    </div>
-                </td>
-                <td>Оплачен вовремя</td>
-                <td>Ждет проверки управляющего</td>
-                <th style="gap: 20px; display: flex; align-items: center">
-                    <svg width="34" height="31" viewBox="0 0 34 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M0 19.6667V17.5833H14.5833V19.6667H0ZM0 11.3333V9.25H22.9167V11.3333H0ZM0 3V0.916668H22.9167V3H0ZM17.1458 30.0833V25.4792L28.2562 14.4229C28.4632 14.2424 28.6757 14.1104 28.8937 14.0271C29.1118 13.9438 29.3306 13.9007 29.55 13.8979C29.7889 13.8979 30.0236 13.9424 30.2542 14.0313C30.4833 14.1215 30.6924 14.2556 30.8812 14.4333L32.8083 16.4021C32.9792 16.6076 33.1097 16.8208 33.2 17.0417C33.2903 17.2625 33.3347 17.4847 33.3333 17.7083C33.3319 17.9319 33.2958 18.1556 33.225 18.3792C33.1542 18.6028 33.0153 18.8181 32.8083 19.025L21.75 30.0833H17.1458ZM29.5625 19.6979L31.4896 17.7083L29.5625 15.7396L27.5833 17.7188L29.5625 19.6979Z" fill="#4E4E4E" />
-                    </svg>
-                    <svg width="27" height="31" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12.6987 21.5742H14.6011V12.6541L18.596 16.6281L19.9429 15.2812L13.6499 8.98827L7.35696 15.2812L8.70382 16.6281L12.6987 12.6541V21.5742ZM5.30813 30.5C4.43305 30.5 3.70255 30.207 3.11663 29.6211C2.53071 29.0352 2.23711 28.3041 2.23584 27.4277V3.86715H0.333496V1.96481H7.94288V0.5H19.357V1.96481H26.9663V3.86715H25.064V27.4277C25.064 28.3028 24.771 29.0333 24.1851 29.6192C23.5992 30.2051 22.8681 30.4987 21.9917 30.5H5.30813Z" fill="#4E4E4E" />
-                    </svg>
-
-                </th>
-            </tr>
-
-            <tr>
-                <td>НД-335</td>
-                <td>15.10.2023</td>
-                <td>9.11.2023</td>
-                <td>100,000 ₽</td>
-                <td>Мягкая мебель</td>
-                <td>Изготовление пуфиков</td>
-                <td>
-                    <div class="avatars">
-                        <img src="path_to_avatar1.jpg" alt="Ответственный 1" class="avatar" >
-                        <img src="path_to_avatar2.jpg" alt="Ответственный 2" class="avatar">
-                    </div>
-                </td>
-                <td>Оплачен вовремя</td>
-                <td>Ждет проверки управляющего</td>
-                <th style="gap: 20px; display: flex; align-items: center">
-                    <svg width="34" height="31" viewBox="0 0 34 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M0 19.6667V17.5833H14.5833V19.6667H0ZM0 11.3333V9.25H22.9167V11.3333H0ZM0 3V0.916668H22.9167V3H0ZM17.1458 30.0833V25.4792L28.2562 14.4229C28.4632 14.2424 28.6757 14.1104 28.8937 14.0271C29.1118 13.9438 29.3306 13.9007 29.55 13.8979C29.7889 13.8979 30.0236 13.9424 30.2542 14.0313C30.4833 14.1215 30.6924 14.2556 30.8812 14.4333L32.8083 16.4021C32.9792 16.6076 33.1097 16.8208 33.2 17.0417C33.2903 17.2625 33.3347 17.4847 33.3333 17.7083C33.3319 17.9319 33.2958 18.1556 33.225 18.3792C33.1542 18.6028 33.0153 18.8181 32.8083 19.025L21.75 30.0833H17.1458ZM29.5625 19.6979L31.4896 17.7083L29.5625 15.7396L27.5833 17.7188L29.5625 19.6979Z" fill="#4E4E4E" />
-                    </svg>
-                    <svg width="27" height="31" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12.6987 21.5742H14.6011V12.6541L18.596 16.6281L19.9429 15.2812L13.6499 8.98827L7.35696 15.2812L8.70382 16.6281L12.6987 12.6541V21.5742ZM5.30813 30.5C4.43305 30.5 3.70255 30.207 3.11663 29.6211C2.53071 29.0352 2.23711 28.3041 2.23584 27.4277V3.86715H0.333496V1.96481H7.94288V0.5H19.357V1.96481H26.9663V3.86715H25.064V27.4277C25.064 28.3028 24.771 29.0333 24.1851 29.6192C23.5992 30.2051 22.8681 30.4987 21.9917 30.5H5.30813Z" fill="#4E4E4E" />
-                    </svg>
-
-                </th>
-            </tr>
+<!--            {% for order in orders %}-->
+<!--            <tr>-->
+<!--                <td>{{ order.number }}</td>-->
+<!--                <td>{{ order.contract.create_date|date:"d.m.Y" }}</td>-->
+<!--                <td>{{ order.contract.completion_date|date:"d.m.Y" }}</td>-->
+<!--                <td>{{ order.contract.total_value|floatformat:"2"|intcomma|safe|cut:"." }} ₽</td>-->
+<!--                <td>{{ order.technical_specifications.first.get_furniture_type1_display }}</td>-->
+<!--                <td>{{ order.technical_specifications.first.short_descr }}</td>-->
+<!--                <td>-->
+<!--                    <div class="avatars">-->
+<!--                        {% if order.executor1 %}-->
+<!--                        <img src="{{ order.executor1.avatar.url }}" alt="{{ order.executor1 }}" class="avatar">-->
+<!--                        {% endif %}-->
+<!--                        {% if order.executor2 %}-->
+<!--                        <img src="{{ order.executor2.avatar.url }}" alt="{{ order.executor2 }}" class="avatar">-->
+<!--                        {% endif %}-->
+<!--                        {% if order.executor3 %}-->
+<!--                        <img src="{{ order.executor3.avatar.url }}" alt="{{ order.executor3 }}" class="avatar">-->
+<!--                        {% endif %}-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td>{% if order.contract.is_balance_paid %}Оплачен{% else %}Не оплачен{% endif %}</td>-->
+<!--                <td>{{ order.get_status_display }}</td>-->
+<!--                <td>-->
+<!--                    &lt;!&ndash; Иконки управления &ndash;&gt;-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            {% endfor %}-->
         </tbody>
     </table>
 </div>
@@ -715,12 +595,79 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
 
 
-
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
     const today = new Date();
     const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+    let startDate = lastMonth;
+    let endDate = new Date(today.setHours(23, 59, 59, 999));
+
+    function fetchOrders() {
+        $.ajax({
+            url: '{% url "orders" %}',
+            data: {
+                'search_query': $('input[name="search_query"]').val(),
+                'status': $('select[name="status"]').val(),
+                'type': $('select[name="type"]').val(),
+                'payment_status': $('select[name="payment_status"]').val(),
+                'start_date': startDate.toISOString().slice(0, 10), // Формат как YYYY-MM-DD
+                'end_date': endDate.toISOString().slice(0, 10) // Формат как YYYY-MM-DD
+            },
+            dataType: 'json',
+            success: function (data) {
+                var tableBody = $('.orders-table tbody');
+                var rowCount = data.data.length; // Получаем количество строк в ответе
+                tableBody.empty();
+                if (data.data.length === 0) {
+                    tableBody.append('<tr><td colspan="9">Нет данных.</td></tr>');
+                    $('.sort-count-orders').text(0 + ' результат');
+                } else {
+                   data.data.forEach(function(order) {
+                        var executorsHTML = '<div class="avatars">';
+
+                        // Добавление менеджера, который идет первым
+                        if (order.manager && order.manager.avatar_url) {
+                            executorsHTML += '<img src="' + order.manager.avatar_url + '" alt="' + order.manager.full_name + '" class="avatar">';
+                        }
+
+                        // Добавление исполнителей
+                        order.executors.forEach(function(executor) {
+                            if (executor.avatar_url) {
+                                executorsHTML += '<img src="' + executor.avatar_url + '" alt="' + executor.full_name + '" class="avatar">';
+                            }
+                        });
+
+                        executorsHTML += '</div>';
+                        tableBody.append(
+                            '<tr>' +
+                            '<td style="font-weight: 600">' + order.number + '</td>' +
+                            '<td style="font-weight: 600">' + order.create_date + '</td>' +
+                            '<td style="font-weight: 600">' + order.completion_date + '</td>' +
+                            '<td>' + order.total_value + ' ₽</td>' +
+                            '<td>' + order.type + '</td>' +
+                            '<td>' + order.description + '</td>' +
+                            '<td>' + executorsHTML + '</td>' +
+                            '<td>' + order.payment_status + '</td>' +
+                            '<td>' + order.status + '</td>' +
+                            '<td> <!-- Иконки управления --> </td>' +
+                            '</tr>'
+                        );
+                    });
+                   $('.sort-count-orders').text(rowCount + ' результат');
+
+                }$('.count-orders').text(data.total_count + ' за все время');
+
+            },
+            error: function (error) {
+                console.error('Error:', error);
+                alert('Ошибка при загрузке данных');
+            }
+        });
+    }
+
+    $('input[name="search_query"], select').on('change input', fetchOrders);
+    fetchOrders(); // Initial fetch
 
     flatpickr("#dateRangePicker", {
         mode: "range",
@@ -728,28 +675,27 @@ document.addEventListener('DOMContentLoaded', function() {
         dateFormat: "d F Y",
         defaultDate: [lastMonth, today],
         onChange: function(selectedDates) {
-            const input = document.getElementById("dateRangePicker");
             if (selectedDates.length === 2) {
-                const startDate = selectedDates[0];
-                const endDate = selectedDates[1];
-
-                // Проверяем, что обе даты находятся в одном и том же году
+                startDate = selectedDates[0];
+                endDate = new Date(selectedDates[1].setHours(23, 59, 59, 999));
+                const input = document.getElementById("dateRangePicker");
                 if (startDate.getFullYear() === endDate.getFullYear()) {
-                    // Форматирование: '1 Марта — 1 Апреля 2024'
                     input.value = startDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' }) +
                                   ' — ' +
                                   endDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' }) +
                                   ' ' +
                                   endDate.getFullYear();
                 } else {
-                    // Если даты в разных годах, сохраняем изначальный формат
                     input.value = startDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) +
                                   ' — ' +
                                   endDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
                 }
+                fetchOrders(); // Fetch orders when dates change
             }
         }
     });
 });
 </script>
+
+
 {% endblock %}

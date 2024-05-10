@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from .models import *
+from .models import Order, TechnicalSpecification, Contract
 from django.core.serializers import serialize
 from .forms import (NameForm, AvatarForm, PositionForm, StatusForm, CitizenshipForm, PassportForm, SalaryForm)
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from decimal import Decimal
+import datetime
 
 
 def main_view(request):
@@ -27,8 +29,105 @@ def active_view(request):
 
 
 #ЗАКАЗЫ
+def get_payment_status(contract, pickup_delivery):
+    if not contract.is_prepayment_paid and not contract.is_balance_paid:
+        return "Ожидает предоплаты"
+    elif contract.is_prepayment_paid and not contract.is_balance_paid:
+        if pickup_delivery and pickup_delivery.actual_delivery_date:
+            return "Ожидает оплаты"
+        return "Внесена предоплата"
+    elif contract.is_balance_paid:
+        return "Оплата произведена"
+    return "Неопределенный статус"
+
 def orders_view(request):
-    return render(request, 'orders.html')
+    orders = Order.objects.select_related(
+        'contract', 'manager', 'executor1', 'executor2', 'executor3'
+    ).prefetch_related('technical_specifications', 'pickupdelivery_set')
+
+    total_count = orders.count()
+
+    # Получаем параметры фильтрации из GET-запроса
+    search_query = request.GET.get('search_query', '')
+    status_filter = request.GET.get('status', '')
+    type_filter = request.GET.get('type', '')
+    payment_status_filter = request.GET.get('payment_status', '')
+    start_date = request.GET.get('start_date', '')
+    end_date = request.GET.get('end_date', '')
+
+    # Фильтрация по номеру заказа или описанию
+    if search_query:
+        orders = orders.filter(
+            Q(number__icontains=search_query) |
+            Q(technical_specifications__short_descr__icontains=search_query)
+        ).distinct()
+
+    # Фильтрация по статусу заказа
+    if status_filter:
+        orders = orders.filter(status=status_filter)
+
+    # Фильтрация по типу мебели
+    if type_filter:
+        orders = orders.filter(technical_specifications__furniture_type1=type_filter)
+
+    # Расширенная фильтрация по статусу оплаты
+    if payment_status_filter:
+        if payment_status_filter == "awaiting_prepayment":
+            orders = orders.filter(contract__is_prepayment_paid=False, contract__is_balance_paid=False)
+        elif payment_status_filter == "prepayment_made":
+            orders = orders.filter(contract__is_prepayment_paid=True, contract__is_balance_paid=False, pickupdelivery_set__actual_delivery_date__isnull=True)
+        elif payment_status_filter == "awaiting_payment":
+            orders = orders.filter(contract__is_prepayment_paid=True, contract__is_balance_paid=False, pickupdelivery_set__actual_delivery_date__isnull=False)
+        elif payment_status_filter == "payment_done":
+            orders = orders.filter(contract__is_balance_paid=True)
+
+    if start_date and end_date:
+        orders = orders.filter(contract__create_date__range=[start_date, end_date])
+
+    # AJAX запрос для обновления таблицы заказов без перезагрузки страницы
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        data = format_orders_data(orders)
+        return JsonResponse({'data': data, 'total_count': total_count}, safe=False)
+
+    return render(request, 'orders.html', {
+        'orders': orders
+    })
+
+def format_orders_data(orders):
+    data = []
+    for order in orders:
+        pickup_delivery = order.pickupdelivery_set.first()
+        payment_status = get_payment_status(order.contract, pickup_delivery)
+
+        # Список исполнителей
+        executors = []
+        for executor in [order.executor1, order.executor2, order.executor3]:
+            if executor:
+                executors.append({
+                    'avatar_url': executor.avatar.url if executor.avatar else '',
+                    'full_name': f"{executor.first_name} {executor.last_name}"
+                })
+
+        # Добавление информации о менеджере
+        manager = {
+            'full_name': f"{order.manager.first_name} {order.manager.last_name}" if order.manager else "Нет данных",
+            'avatar_url': order.manager.avatar.url if order.manager and order.manager.avatar else ''
+        }
+
+        data.append({
+            'number': order.number,
+            'create_date': order.contract.create_date.strftime('%d.%m.%Y'),
+            'completion_date': order.contract.completion_date.strftime('%d.%m.%Y'),
+            'total_value': "{:,.2f}".format(order.contract.total_value).replace(",", " ").replace(".", ","),
+            'type': order.technical_specifications.first().get_furniture_type1_display() if order.technical_specifications.exists() else '',
+            'description': order.technical_specifications.first().short_descr if order.technical_specifications.exists() else '',
+            'payment_status': payment_status,
+            'status': order.get_status_display(),
+            'executors': executors,
+            'manager': manager  # Добавление информации о менеджере в вывод
+        })
+    return data
+
 
 def add_order(request):
     return render(request, 'add_order.html')

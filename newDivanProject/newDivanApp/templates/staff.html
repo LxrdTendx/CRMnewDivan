@@ -659,6 +659,8 @@ $(document).ready(function() {
                 tableBody.empty();
                 if (rowCount === 0) {
                     tableBody.append('<tr><td colspan="9">Нет данных.</td></tr>');
+                    $('.sort-count-emp').text(0 + ' результат');
+
                 } else {
                     $.each(data.data, function(index, employee) {
                         var formattedDate = new Date(employee.employment_date).toLocaleDateString('ru-RU');
