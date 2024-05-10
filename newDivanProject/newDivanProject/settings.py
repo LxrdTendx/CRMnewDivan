@@ -78,8 +78,12 @@ WSGI_APPLICATION = 'newDivanProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'CRMNewDivan',
+        'USER': 'test',
+        'PASSWORD': 'sownh12345',
+        'HOST': '45.12.74.4',
+        'PORT': '5432',
     }
 }
 
