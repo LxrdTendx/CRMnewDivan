@@ -353,10 +353,12 @@
         </div>
         <div class="employee-data">
             <div class="left-section">
-                <div class="employee-avatar" id="avatarPreview" style="background-image: url('{{ employee.avatar.url }}');">
-                    <label for="avatarInput" class="upload-label" style="cursor: pointer;">
-                        <input type="file" id="avatarInput" name="avatar" accept="image/*"  style="border-radius: 8px; display: none" disabled> <!-- Добавить скрытие кнопки, когда редактирование не активно-->
-                    </label>
+                <div class="left-section">
+                    <div class="employee-avatar" id="avatarPreview" style="background-image: url('{% if employee.avatar %}{{ employee.avatar.url }}{% endif %}');">
+                        <label for="avatarInput" class="upload-label" style="cursor: pointer;">
+                            <input type="file" id="avatarInput" name="avatar" accept="image/*"  style="border-radius: 8px; display: none" {% if not employee.avatar %}disabled{% endif %}> <!-- Добавить скрытие кнопки, когда редактирование не активно-->
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class="right-section">
