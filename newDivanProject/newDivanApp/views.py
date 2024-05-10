@@ -30,13 +30,13 @@ def active_view(request):
 
 #ЗАКАЗЫ
 def get_payment_status(contract, pickup_delivery):
-    if not contract.is_prepayment_paid and not contract.is_balance_paid:
+    if not contract.is_prepayment_paid and not contract.is_postpayment_paid:
         return "Ожидает предоплаты"
-    elif contract.is_prepayment_paid and not contract.is_balance_paid:
-        if pickup_delivery and pickup_delivery.actual_delivery_date:
+    elif contract.is_prepayment_paid and not contract.is_postpayment_paid:
+        if pickup_delivery and pickup_delivery.delivery_date:
             return "Ожидает оплаты"
         return "Внесена предоплата"
-    elif contract.is_balance_paid:
+    elif contract.is_postpayment_paid:
         return "Оплата произведена"
     return "Неопределенный статус"
 
@@ -73,13 +73,13 @@ def orders_view(request):
     # Расширенная фильтрация по статусу оплаты
     if payment_status_filter:
         if payment_status_filter == "awaiting_prepayment":
-            orders = orders.filter(contract__is_prepayment_paid=False, contract__is_balance_paid=False)
+            orders = orders.filter(contract__is_prepayment_paid=False, contract__is_postpayment_paid=False)
         elif payment_status_filter == "prepayment_made":
-            orders = orders.filter(contract__is_prepayment_paid=True, contract__is_balance_paid=False, pickupdelivery_set__actual_delivery_date__isnull=True)
+            orders = orders.filter(contract__is_prepayment_paid=True, contract__is_postpayment_paid=False, pickupdelivery_set__delivery_date__isnull=True)
         elif payment_status_filter == "awaiting_payment":
-            orders = orders.filter(contract__is_prepayment_paid=True, contract__is_balance_paid=False, pickupdelivery_set__actual_delivery_date__isnull=False)
+            orders = orders.filter(contract__is_prepayment_paid=True, contract__is_postpayment_paid=False, pickupdelivery_set__delivery_date__isnull=False)
         elif payment_status_filter == "payment_done":
-            orders = orders.filter(contract__is_balance_paid=True)
+            orders = orders.filter(contract__is_postpayment_paid=True)
 
     if start_date and end_date:
         orders = orders.filter(contract__create_date__range=[start_date, end_date])
