@@ -137,12 +137,14 @@ def add_order(request):
     executors = Employee.objects.filter(position=worker_position) if worker_position else Employee.objects.none()
 
     if request.method == 'POST':
+        #заказ
         number = request.POST.get('number')
         manager_id = request.POST.get('manager')
         executors_ids = request.POST.get('executors', '')
         executors_ids = executors_ids.split(',') if executors_ids else []
         source = request.POST.get('source')
 
+        #договор
         contract_num = request.POST.get('contract_num')
         create_date = request.POST.get('create_date')
         completion_date = request.POST.get('completion_date')
@@ -156,16 +158,47 @@ def add_order(request):
         is_postpayment_paid = request.POST.get('is_postpayment_paid') == 'true'
         postpayment_date = request.POST.get('postpayment_date')
 
+        #клиент
         address = request.POST.get('address')
         contact_number = request.POST.get('contact_number')
         full_name = request.POST.get('full_name')
         comments = request.POST.get('comments')
 
+
+        #тех. задание
         items_qty = int(request.POST.get('items_qty'))
         short_descr = request.POST.get('short_descr')
         item_type = request.POST.get('item_type')
         furniture_type1 = request.POST.get('furniture_type1')
         work_types = request.POST.get('work_types').split(',')
+
+        # Сбор данных о материалах из POST запроса
+        material_name = request.POST.get('material_name')
+        stock = request.POST.get('stock') == 'true'
+        fitting_name = request.POST.get('fitting_name')
+        fitting_in_stock = request.POST.get('fitting_in_stock') == 'true'
+        material_comments = request.POST.get('material_comments')
+        material_cost = float(request.POST.get('material_cost'))
+        material_order_status = request.POST.get('material_order_status')
+        material_order_date = request.POST.get('material_order_date')
+        material_payment_status = request.POST.get('material_payment_status')
+        material_payment_date = request.POST.get('material_payment_date')
+
+        # Добавление данных забора
+        is_picked = request.POST.get('pickupdelivery_is_picked') == 'true'
+        pickup_date = request.POST.get('pickupdelivery_pickup_date')
+        pickup_time = request.POST.get('pickupdelivery_pickup_time')
+        pickup_type = request.POST.get('pickupdelivery_pickup_type')
+        pickup_guy_id = request.POST.get('pickup_guy')
+        pickup_comments = request.POST.get('pickupdelivery_pickup_comments')
+
+        # Добавление данных доставки
+        is_delivered = request.POST.get('pickupdelivery_is_delivered') == 'true'
+        delivery_date = request.POST.get('pickupdelivery_delivery_date')
+        delivery_time = request.POST.get('pickupdelivery_delivery_time')
+        delivery_type = request.POST.get('pickupdelivery_delivery_type')
+        delivery_guy_id = request.POST.get('delivery_guy')
+        delivery_comments = request.POST.get('pickupdelivery_delivery_comments')
 
 
         # Create a Client instance
@@ -230,6 +263,44 @@ def add_order(request):
             work_type1=work_types[0] if len(work_types) > 0 else None,
             work_type2=work_types[1] if len(work_types) > 1 else None
         )
+
+        # Создание объекта Material
+        material = Material(
+            order=new_order,
+            name=material_name,
+            in_stock=stock,
+            cost=material_cost,
+            order_status=material_order_status,
+            order_date=datetime.strptime(material_order_date, '%Y-%m-%d') if material_order_date else None,
+            payment_status=material_payment_status,
+            payment_date=datetime.strptime(material_payment_date, '%Y-%m-%d') if material_payment_date else None,
+            fitting_name=fitting_name,
+            fitting_in_stock=fitting_in_stock,
+            comments=material_comments
+        )
+        material.save()
+
+        pickup = PickupDelivery(
+            order=new_order,
+            is_picked=is_picked,
+            pickup_date=datetime.strptime(pickup_date, '%Y-%m-%d') if pickup_date else None,
+            pickup_time=pickup_time,
+            pickup_type=pickup_type,
+            pickup_guy=Employee.objects.get(id=pickup_guy_id) if pickup_guy_id else None,
+            pickup_comments=pickup_comments
+        )
+        pickup.save()
+
+        delivery = PickupDelivery(
+            order=new_order,
+            is_delivered=is_delivered,
+            delivery_date=datetime.strptime(delivery_date, '%Y-%m-%d') if delivery_date else None,
+            delivery_time=delivery_time,
+            delivery_type=delivery_type,
+            delivery_guy=Employee.objects.get(id=delivery_guy_id) if delivery_guy_id else None,
+            delivery_comments=delivery_comments
+        )
+        delivery.save()
 
 
 
