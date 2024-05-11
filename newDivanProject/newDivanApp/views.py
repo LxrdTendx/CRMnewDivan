@@ -7,7 +7,7 @@ from .forms import (NameForm, AvatarForm, PositionForm, StatusForm, CitizenshipF
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from decimal import Decimal
-import datetime
+from datetime import datetime
 
 
 def main_view(request):
@@ -129,8 +129,95 @@ def format_orders_data(orders):
     return data
 
 
+@csrf_exempt
 def add_order(request):
-    return render(request, 'add_order.html')
+    manager_position = JobTitle.objects.filter(name='Менеджер').first()
+    managers = Employee.objects.filter(position=manager_position) if manager_position else Employee.objects.none()
+    worker_position = JobTitle.objects.filter(name='Рабочий').first()
+    executors = Employee.objects.filter(position=worker_position) if worker_position else Employee.objects.none()
+
+    if request.method == 'POST':
+        number = request.POST.get('number')
+        manager_id = request.POST.get('manager')
+        executors_ids = request.POST.getlist('executors')
+        source = request.POST.get('source')
+        contract_num = request.POST.get('contract_num')
+        create_date = request.POST.get('create_date')
+        completion_date = request.POST.get('completion_date')
+        total_value = request.POST.get('total_value')
+        payment_type = request.POST.get('payment_type')
+        prepayment_share = request.POST.get('prepayment_share')
+        prepayment_value = request.POST.get('prepayment_value')
+        is_prepayment_paid = request.POST.get('is_prepayment_paid') == 'true'
+        prepayment_date = request.POST.get('prepayment_date')
+        postpayment_value = request.POST.get('postpayment_value')
+        is_postpayment_paid = request.POST.get('is_postpayment_paid') == 'true'
+        postpayment_date = request.POST.get('postpayment_date')
+        address = request.POST.get('address')
+        contact_number = request.POST.get('contact_number')
+        full_name = request.POST.get('full_name')
+        comments = request.POST.get('comments')
+
+        # Create a Client instance
+        client = Client(
+            first_name=full_name.split()[1],
+            last_name=full_name.split()[0] if len(full_name.split()) > 1 else '',
+            middle_name=full_name.split()[2] if len(full_name.split()) > 2 else '',
+            contact_number=contact_number,
+            address=address,
+            comments=comments
+        )
+        client.save()
+
+        # Parse dates and calculate the duration
+        create_date_dt = datetime.strptime(create_date, '%Y-%m-%d')
+        completion_date_dt = datetime.strptime(completion_date, '%Y-%m-%d')
+        duration = (completion_date_dt - create_date_dt).days
+
+
+        # Create a Contract instance
+        contract = Contract(
+            num=contract_num,
+            client=client,
+            create_date=create_date_dt,
+            completion_date=completion_date_dt,
+            duration=duration,
+            total_value=float(total_value),
+            total_work_cost=float(total_value),
+            payment_type=payment_type,
+            prepayment_share=float(prepayment_share),
+            prepayment_value=int(prepayment_value),
+            is_prepayment_paid=is_prepayment_paid,
+            prepayment_date=datetime.strptime(prepayment_date, '%Y-%m-%d') if prepayment_date else None,
+            postpayment_value=int(postpayment_value),
+            is_postpayment_paid=is_postpayment_paid,
+            postpayment_date=datetime.strptime(postpayment_date, '%Y-%m-%d') if postpayment_date else None
+        )
+        contract.save()
+
+        # Create an Order instance
+        manager = Employee.objects.get(id=manager_id)
+        new_order = Order(
+            number=number,
+            manager=manager,
+            source=source,
+            contract=contract
+        )
+        new_order.save()
+
+        # Associate executors with the order
+        for executor_id in executors_ids:
+            executor = Employee.objects.get(id=executor_id)
+            new_order.executors.add(executor)
+
+        return redirect('orders')
+
+    else:
+        context = {
+            'managers': managers,
+            'executors': executors
+        }
+        return render(request, 'add_order.html', context)
 
 
 #СОТРУДНИКИ
