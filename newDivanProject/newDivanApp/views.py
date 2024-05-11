@@ -139,8 +139,10 @@ def add_order(request):
     if request.method == 'POST':
         number = request.POST.get('number')
         manager_id = request.POST.get('manager')
-        executors_ids = request.POST.getlist('executors')
+        executors_ids = request.POST.get('executors', '')
+        executors_ids = executors_ids.split(',') if executors_ids else []
         source = request.POST.get('source')
+
         contract_num = request.POST.get('contract_num')
         create_date = request.POST.get('create_date')
         completion_date = request.POST.get('completion_date')
@@ -153,10 +155,18 @@ def add_order(request):
         postpayment_value = request.POST.get('postpayment_value')
         is_postpayment_paid = request.POST.get('is_postpayment_paid') == 'true'
         postpayment_date = request.POST.get('postpayment_date')
+
         address = request.POST.get('address')
         contact_number = request.POST.get('contact_number')
         full_name = request.POST.get('full_name')
         comments = request.POST.get('comments')
+
+        items_qty = int(request.POST.get('items_qty'))
+        short_descr = request.POST.get('short_descr')
+        item_type = request.POST.get('item_type')
+        furniture_type1 = request.POST.get('furniture_type1')
+        work_types = request.POST.get('work_types').split(',')
+
 
         # Create a Client instance
         client = Client(
@@ -186,12 +196,13 @@ def add_order(request):
             total_work_cost=float(total_value),
             payment_type=payment_type,
             prepayment_share=float(prepayment_share),
-            prepayment_value=int(prepayment_value),
+            prepayment_value=float(prepayment_value),
             is_prepayment_paid=is_prepayment_paid,
             prepayment_date=datetime.strptime(prepayment_date, '%Y-%m-%d') if prepayment_date else None,
-            postpayment_value=int(postpayment_value),
+            postpayment_value=float(postpayment_value),
             is_postpayment_paid=is_postpayment_paid,
-            postpayment_date=datetime.strptime(postpayment_date, '%Y-%m-%d') if postpayment_date else None
+            postpayment_date=datetime.strptime(postpayment_date, '%Y-%m-%d') if postpayment_date else None,
+            comments=comments,
         )
         contract.save()
 
@@ -202,14 +213,25 @@ def add_order(request):
             manager=manager,
             source=source,
             contract=contract,
-            status='registered'
+            status='registered',
+            executor1 = Employee.objects.get(id=executors_ids[0]) if len(executors_ids) > 0 else None,
+            executor2 = Employee.objects.get(id=executors_ids[1]) if len(executors_ids) > 1 else None,
+            executor3 = Employee.objects.get(id=executors_ids[2]) if len(executors_ids) > 2 else None
         )
         new_order.save()
 
-        # Associate executors with the order
-        for executor_id in executors_ids:
-            executor = Employee.objects.get(id=executor_id)
-            new_order.executors.add(executor)
+        # Создание технического задания
+        TechnicalSpecification.objects.create(
+            order=new_order,
+            items_qty=items_qty,
+            short_descr=short_descr,
+            item_type=item_type,
+            furniture_type1=furniture_type1,
+            work_type1=work_types[0] if len(work_types) > 0 else None,
+            work_type2=work_types[1] if len(work_types) > 1 else None
+        )
+
+
 
         return redirect('orders')
 

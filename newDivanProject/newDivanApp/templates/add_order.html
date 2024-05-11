@@ -232,9 +232,11 @@
     .order-data{
         margin-top: 40px;
     }
+
     .mult-select-tag .rounded  {
         border: 1px solid #a5a5a5 !important;
         border-radius: 15px !important;
+        box-sizing: border-box;
         width: 340px;
         height: 45px;
         box-shadow: inset 0 0 20px -3px rgba(255, 255, 255, 0.1);
@@ -354,6 +356,7 @@
                         {% endfor %}
                       </select>
                     </label>
+                    <input type="hidden" name="executors" id="executors" value="">
                 </div>
                 <div class="point-in-form">
                     <label class="title-style">Источник<br>
@@ -389,7 +392,7 @@
                     <div class="point-in-form" style="display: block; border-radius: 20px; width: 360px; height: 216px; background: #fff; margin-top: 21px">
                         <label class="title-style" style="display: block; margin-bottom: 17px; margin-left: auto; margin-right: auto; padding-top: 26px">
                             Общая стоимость по договору
-                            <input type="number" name="total_value" required>
+                            <input type="number" name="total_value" id="total_value" required>
                         </label>
                         <label class="title-style" style="display: block; margin-left: auto; margin-right: auto">
                             Способ оплаты<br>
@@ -403,10 +406,10 @@
                     <div class="point-in-form" style="margin-top: 47px; display: block;">
                         <div style="display: flex; gap: 20px">
                             <label class="title-style" style="width: 70px">Аванс<br>
-                                <input type="number" name="prepayment_share" style="width: 100%" required>
+                                <input type="number" name="prepayment_share" id="prepayment_share" style="width: 100%" required>
                             </label>
                             <label class="title-style">
-                                <input type="number" name="prepayment_value" style="margin-top: 28px" required>
+                                <input type="number" name="prepayment_value" id="prepayment_value" style="margin-top: 28px" required>
                             </label>
                             <label class="title-style" style=" align-items: center; display: flex; height: 20px; margin-top: 40px; width: unset">
                                 <input type="checkbox" name="is_prepayment_paid" style="width: unset; height: unset" value="true"> Оплачен
@@ -422,7 +425,7 @@
                     <div class="point-in-form" style="margin-top: 47px; display: block">
                         <div style="display: flex; gap: 20px">
                              <label class="title-style">Остаток<br>
-                                <input type="number" name="postpayment_value" required>
+                                <input type="number" name="postpayment_value" id="postpayment_value" required>
                             </label>
                             <label class="title-style" style=" align-items: center; display: flex; height: 20px; margin-top: 40px; width: unset">
                                 <input type="checkbox" name="is_postpayment_paid" style="width: unset; height: unset" value="true"> Оплачен
@@ -439,8 +442,8 @@
 
                 <div class="pay-info">Информация о заказчике</div>
 
-                <div style="display: flex; border-radius: 20px; background: #fff; padding: 20px; width: 1060px">
-                    <div class="point-in-form">
+                <div style="display: flex; border-radius: 20px; background: #fff; padding: 20px; width: 1060px; margin-top: 10px;">
+                    <div class="point-in-form" style="margin-bottom: unset">
                         <label class="title-style">Адрес заказчика<br>
                             <input type="text" name="address" id="address" required>
                         </label>
@@ -453,15 +456,40 @@
                         <label class="title-style" style="width: 100%">Комментарии к заказчику<br>
                             <input style="width: 100%" type="text" name="comments" id="comments" required>
                         </label>
-
-
-
-
                     </div>
                 </div>
 
+                <div class="pay-info" style="margin-top: 40px">Объект работы</div>
+                <div style="display: flex; border-radius: 20px; background: #fff; padding: 20px; width: 1060px; margin-top: 10px;">
+                    <div class="point-in-form" style="margin-bottom: unset">
+                        <label class="title-style">Тип мебели<br>
+                            <select name="furniture_type1" required>
+                                <option value="soft">Мягкая мебель</option>
+                                <option value="cabinet">Корпусная мебель</option>
+                            </select>
+                        </label>
+                        <label class="title-style">Тип работы<br>
+                            <select id="work_type1" multiple required>
+                                <option value="create">Изготовление</option>
+                                <option value="reupholster">Перетяжка</option>
+                                <option value="restoration">Реставрация</option>
+                                <option value="new_build">Новодел</option>
+                            </select>
+                        </label>
+                        <input type="hidden" name="work_types" id="work_types" value="">
 
+                        <label class="title-style" style="width: 140px">Тип изделия<br>
+                            <input style="width: 100%" type="text" name="item_type" id="item_type" required>
+                        </label>
+                        <label class="title-style" style="width: 170px">Кол-во изделий<br>
+                            <input style="width: 100%" type="number" name="items_qty" id="items_qty" required>
+                        </label>
+                        <label class="title-style" style="width: 100%">Краткое описание<br>
+                            <input style="width: 100%" type="text" name="short_descr" id="short_descr" required>
+                        </label>
 
+                    </div>
+                </div>
 
 
                 <button type="submit" style="margin-top: 20px;">Создать заказ</button>
@@ -474,6 +502,80 @@
 
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    function updateValues() {
+        var totalValue = parseFloat(document.getElementById('total_value').value) || 0;
+        var prepaymentShare = parseFloat(document.getElementById('prepayment_share').value) || 0;
+
+        // Расчет предоплаты как процент от общей суммы
+        var prepaymentValue = (prepaymentShare / 100) * totalValue;
+        document.getElementById('prepayment_value').value = prepaymentValue.toFixed(2);
+
+        // Расчет остатка платежа
+        var postpaymentValue = totalValue - prepaymentValue;
+        document.getElementById('postpayment_value').value = postpaymentValue.toFixed(2);
+    }
+
+    // Подписка на события изменения значений для автоматического пересчета
+    document.getElementById('total_value').addEventListener('input', updateValues);
+    document.getElementById('prepayment_share').addEventListener('input', updateValues);
+
+    // Инициализация расчетов при загрузке
+    updateValues();
+});
+</script>
+
+<script>
+    new MultiSelectTag('work_type1', {
+    rounded: true,    // default true
+    shadow: true,      // default false
+    placeholder: 'Поиск',  // default Search...
+    tagColor: {
+        textColor: '#327b2c',
+        borderColor: '#92e681',
+        bgColor: '#eaffe6',
+    },
+    onChange: function(values) {
+        // Получаем все значения `value` из объектов values и преобразуем их в массив ID
+        var ids = values.map(function(item) {
+            return item.value;
+        });
+        // Преобразуем массив в строку, разделенную запятыми
+        document.getElementById('work_types').value = ids.join(',');
+    }
+})
+</script>
+
+<script>
+    new MultiSelectTag('multiple-select', {
+    rounded: true,    // default true
+    shadow: true,      // default false
+    placeholder: 'Поиск',  // default Search...
+    tagColor: {
+        textColor: '#327b2c',
+        borderColor: '#92e681',
+        bgColor: '#eaffe6',
+    },
+    onChange: function(values) {
+        // Получаем все значения `value` из объектов values и преобразуем их в массив ID
+        var ids = values.map(function(item) {
+            return item.value;
+        });
+        // Преобразуем массив в строку, разделенную запятыми
+        document.getElementById('executors').value = ids.join(',');
+    }
+})
+</script>
+
+<script>
+document.addEventListener('keydown', function(event) {
+    if (event.key === "Escape") { // Проверка нажатия на клавишу "Esc"
+        window.location.href = "{% url 'orders' %}"; // Перенаправление на страницу сотрудников
+    }
+});
+</script>
+
+<script>
     // Add JavaScript to calculate the difference in days
     document.getElementById('completion_date').addEventListener('change', function() {
         const startDate = new Date(document.getElementById('create_date').value);
@@ -482,31 +584,6 @@
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         document.getElementById('contract_duration').textContent = diffDays;
     });
-</script>
-
-<script>
-    new MultiSelectTag('multiple-select', {
-    rounded: true,    // default true
-    shadow: true,      // default false
-    placeholder: 'Search',  // default Search...
-    tagColor: {
-        textColor: '#327b2c',
-        borderColor: '#92e681',
-        bgColor: '#eaffe6',
-    },
-    onChange: function(values) {
-        console.log(values)
-    }
-})
-</script>
-
-
-<script>
-document.addEventListener('keydown', function(event) {
-    if (event.key === "Escape") { // Проверка нажатия на клавишу "Esc"
-        window.location.href = "{% url 'orders' %}"; // Перенаправление на страницу сотрудников
-    }
-});
 </script>
 
 {% endblock %}
