@@ -201,7 +201,8 @@ def add_order(request):
             number=number,
             manager=manager,
             source=source,
-            contract=contract
+            contract=contract,
+            status='registered'
         )
         new_order.save()
 
