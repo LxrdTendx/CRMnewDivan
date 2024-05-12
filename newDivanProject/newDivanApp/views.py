@@ -300,20 +300,17 @@ def add_order(request):
             pickup_time=pickup_time,
             pickup_type=pickup_type,
             pickup_guy=Employee.objects.get(id=pickup_guy_id) if pickup_guy_id else None,
-            pickup_comments=pickup_comments
+            pickup_comments=pickup_comments,
+            is_delivered = is_delivered,
+            delivery_date = datetime.strptime(delivery_date, '%Y-%m-%d') if delivery_date else None,
+            delivery_time = delivery_time,
+            delivery_type = delivery_type,
+            delivery_guy = Employee.objects.get(id=delivery_guy_id) if delivery_guy_id else None,
+            delivery_comments = delivery_comments
         )
         pickup.save()
 
-        delivery = PickupDelivery(
-            order=new_order,
-            is_delivered=is_delivered,
-            delivery_date=datetime.strptime(delivery_date, '%Y-%m-%d') if delivery_date else None,
-            delivery_time=delivery_time,
-            delivery_type=delivery_type,
-            delivery_guy=Employee.objects.get(id=delivery_guy_id) if delivery_guy_id else None,
-            delivery_comments=delivery_comments
-        )
-        delivery.save()
+
 
 
 
@@ -337,6 +334,50 @@ def delete_order(request, order_id):
         except Order.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Заказ не найден'})
     return JsonResponse({'success': False, 'error': 'Неверный запрос'})
+
+
+@csrf_exempt
+def refactor_order(request, order_id):
+    # Получаем заказ по ID
+    order = get_object_or_404(Order, id=order_id)
+
+    # Загружаем связанные данные
+    contract = order.contract
+    client = contract.client
+    technical_specification = order.technical_specifications.first()
+    materials = Material.objects.filter(order=order)
+    pickups = PickupDelivery.objects.filter(order=order).first()
+
+
+    # Загружаем список менеджеров и исполнителей
+    manager_position = JobTitle.objects.filter(name='Менеджер').first()
+    managers = Employee.objects.filter(position=manager_position) if manager_position else Employee.objects.none()
+    worker_position = JobTitle.objects.filter(name='Рабочий').first()
+    executors = Employee.objects.filter(position=worker_position) if worker_position else Employee.objects.none()
+
+    executors_list = []
+    if order.executor1:
+        executors_list.append(order.executor1)
+    if order.executor2:
+        executors_list.append(order.executor2)
+    if order.executor3:
+        executors_list.append(order.executor3)
+
+
+    context = {
+        'order': order,
+        'executors_list': executors_list,
+        'contract': contract,
+        'client': client,
+        'technical_specification': technical_specification,
+        'materials': materials,
+        'pickup': pickups,
+        'managers': managers,
+        'executors': executors,
+    }
+
+    return render(request, 'refactor_order.html', context)
+
 
 #СОТРУДНИКИ
 def staff_view(request):

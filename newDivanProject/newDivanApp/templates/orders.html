@@ -692,8 +692,8 @@ $(document).ready(function() {
 
     $(document).on('click', '.refactor-order-button', function(e) {
         e.preventDefault(); // Предотвращаем стандартное поведение
-        var employeeId = $(this).closest('tr').data('employee-id');
-        var url = '/refactor_employee/' + employeeId + '/'; // Формируем URL
+        var orderId = $(this).closest('tr').data('order-id');
+        var url = '/refactor_order/' + orderId + '/'; // Формируем URL
         window.location.href = url; // Переадресация на URL
     });
 
