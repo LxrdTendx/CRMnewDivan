@@ -44,7 +44,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(TechnicalSpecification)
 class TechnicalSpecificationAdmin(admin.ModelAdmin):
-    list_display = ['order', 'items_qty', 'short_descr', 'full_descr', 'work_type1', 'work_type2', 'furniture_type1',
+    list_display = ['order', 'items_qty', 'short_descr', 'work_type1', 'work_type2', 'furniture_type1',
                     'furniture_type2', 'item_type', 'comments', 'photo1', 'photo2', 'photo3', 'photo4']
     list_filter = ['work_type1', 'work_type2', 'furniture_type1', 'furniture_type2']
     search_fields = ['short_descr', 'full_descr', 'item_type']

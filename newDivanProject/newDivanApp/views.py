@@ -115,6 +115,7 @@ def format_orders_data(orders):
         }
 
         data.append({
+            'id': order.id,
             'number': order.number,
             'create_date': order.contract.create_date.strftime('%d.%m.%Y'),
             'completion_date': order.contract.completion_date.strftime('%d.%m.%Y'),
@@ -171,6 +172,12 @@ def add_order(request):
         item_type = request.POST.get('item_type')
         furniture_type1 = request.POST.get('furniture_type1')
         work_types = request.POST.get('work_types').split(',')
+        full_descr = request.POST.get('full_descr')
+        photo1 = request.FILES.get('photo1', None)
+        photo2 = request.FILES.get('photo2', None)
+        photo3 = request.FILES.get('photo3', None)
+        photo4 = request.FILES.get('photo4', None)
+        technicalspecification_comments = request.POST.get('technicalspecification_comments')
 
         # Сбор данных о материалах из POST запроса
         material_name = request.POST.get('material_name')
@@ -261,7 +268,13 @@ def add_order(request):
             item_type=item_type,
             furniture_type1=furniture_type1,
             work_type1=work_types[0] if len(work_types) > 0 else None,
-            work_type2=work_types[1] if len(work_types) > 1 else None
+            work_type2=work_types[1] if len(work_types) > 1 else None,
+            full_descr=full_descr,
+            photo1=photo1,
+            photo2=photo2,
+            photo3=photo3,
+            photo4=photo4,
+            comments = technicalspecification_comments
         )
 
         # Создание объекта Material
@@ -313,6 +326,17 @@ def add_order(request):
         }
         return render(request, 'add_order.html', context)
 
+
+@csrf_exempt
+def delete_order(request, order_id):
+    if request.method == 'POST':
+        try:
+            order = Order.objects.get(pk=order_id)
+            order.delete()
+            return JsonResponse({'success': True})
+        except Order.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Заказ не найден'})
+    return JsonResponse({'success': False, 'error': 'Неверный запрос'})
 
 #СОТРУДНИКИ
 def staff_view(request):

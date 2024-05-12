@@ -406,6 +406,18 @@
         background: #2a2a28;
         border: none;
     }
+    .delete-order-button, .refactor-order-button{
+        cursor: pointer;
+        transition: all 0.3s;
+        fill: #4E4E4E
+
+    }
+    .delete-order-button:hover{
+        fill: #ff0035;
+    }
+    .refactor-order-button:hover{
+        fill: #7e8230;
+    }
     
     
     @media (max-width: 1500px) {
@@ -575,6 +587,28 @@ $(document).ready(function() {
     let startDate = lastMonth;
     let endDate = new Date(today.setHours(23, 59, 59, 999));
 
+
+     function deleteEmployee(orderId) {
+        $.ajax({
+            type: 'POST',
+            url: '/delete-order/' + orderId + '/', // Замените на ваш URL
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    // Если удаление успешно, обновим таблицу сотрудников
+                    fetchOrders();
+                } else {
+                    // Если удаление не удалось, выведем сообщение об ошибке
+                    alert('Ошибка при удалении Заказа: ' + response.error);
+                }
+            },
+            error: function () {
+                // Если запрос не удался, выведем сообщение об ошибке
+                alert('Ошибка при выполнении запроса');
+            }
+        });
+    }
+
     function fetchOrders() {
         $.ajax({
             url: '{% url "orders" %}',
@@ -612,7 +646,7 @@ $(document).ready(function() {
 
                         executorsHTML += '</div>';
                         tableBody.append(
-                            '<tr>' +
+                            '<tr data-order-id="' + order.id + '">' +
                             '<td style="font-weight: 600">' + order.number + '</td>' +
                             '<td style="font-weight: 600">' + order.create_date + '</td>' +
                             '<td style="font-weight: 600">' + order.completion_date + '</td>' +
@@ -622,7 +656,14 @@ $(document).ready(function() {
                             '<td>' + executorsHTML + '</td>' +
                             '<td>' + order.payment_status + '</td>' +
                             '<td>' + order.status + '</td>' +
-                            '<td> <!-- Иконки управления --> </td>' +
+                            '<td style="gap: 20px; display: flex; align-items: center;">' +
+                            '     <svg class="refactor-order-button" width="34" height="31" viewBox="0 0 34 31" fill="none" xmlns="http://www.w3.org/2000/svg">\n' +
+                            '       <path d="M0 19.6667V17.5833H14.5833V19.6667H0ZM0 11.3333V9.25H22.9167V11.3333H0ZM0 3V0.916668H22.9167V3H0ZM17.1458 30.0833V25.4792L28.2562 14.4229C28.4632 14.2424 28.6757 14.1104 28.8937 14.0271C29.1118 13.9438 29.3306 13.9007 29.55 13.8979C29.7889 13.8979 30.0236 13.9424 30.2542 14.0313C30.4833 14.1215 30.6924 14.2556 30.8812 14.4333L32.8083 16.4021C32.9792 16.6076 33.1097 16.8208 33.2 17.0417C33.2903 17.2625 33.3347 17.4847 33.3333 17.7083C33.3319 17.9319 33.2958 18.1556 33.225 18.3792C33.1542 18.6028 33.0153 18.8181 32.8083 19.025L21.75 30.0833H17.1458ZM29.5625 19.6979L31.4896 17.7083L29.5625 15.7396L27.5833 17.7188L29.5625 19.6979Z" />\n' +
+                            '     </svg>' +
+                            '     <svg class="delete-order-button" width="27" height="31" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg">\n' +
+                            '       <path d="M12.6987 21.5742H14.6011V12.6541L18.596 16.6281L19.9429 15.2812L13.6499 8.98827L7.35696 15.2812L8.70382 16.6281L12.6987 12.6541V21.5742ZM5.30813 30.5C4.43305 30.5 3.70255 30.207 3.11663 29.6211C2.53071 29.0352 2.23711 28.3041 2.23584 27.4277V3.86715H0.333496V1.96481H7.94288V0.5H19.357V1.96481H26.9663V3.86715H25.064V27.4277C25.064 28.3028 24.771 29.0333 24.1851 29.6192C23.5992 30.2051 22.8681 30.4987 21.9917 30.5H5.30813Z" />\n' +
+                            '     </svg>' +
+                            '</td>' +
                             '</tr>'
                         );
                     });
@@ -640,6 +681,21 @@ $(document).ready(function() {
 
     $('input[name="search_query"], select').on('change input', fetchOrders);
     fetchOrders(); // Initial fetch
+
+
+    $(document).on('click', '.delete-order-button', function() {
+        var orderId = $(this).closest('tr').data('order-id');
+        if (confirm('Вы уверены, что хотите удалить этот заказ?')) {
+            deleteEmployee(orderId);
+        }
+    });
+
+    $(document).on('click', '.refactor-order-button', function(e) {
+        e.preventDefault(); // Предотвращаем стандартное поведение
+        var employeeId = $(this).closest('tr').data('employee-id');
+        var url = '/refactor_employee/' + employeeId + '/'; // Формируем URL
+        window.location.href = url; // Переадресация на URL
+    });
 
     flatpickr("#dateRangePicker", {
         mode: "range",
