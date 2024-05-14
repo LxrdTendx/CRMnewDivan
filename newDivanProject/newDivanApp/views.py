@@ -11,7 +11,30 @@ from datetime import datetime
 
 
 def main_view(request):
-    return render(request, 'main.html')
+    orders = Order.objects.all().select_related('contract').prefetch_related('technical_specifications')
+    total_orders = orders.count()  # Подсчитываем количество заказов
+    total_employees = Employee.objects.count()
+
+    completed_count = Order.objects.filter(status__in=['closed', 'delivered']).count()
+
+    # Заказы в очереди
+    queue_count = Order.objects.filter(status__in=[
+        'to_do', 'registered', 'to_pickup', 'is_picked', 'to_deliver'
+    ]).count()
+
+    # Заказы в работе
+    in_progress_count = Order.objects.filter(status__in=[
+        'in_progress', 'in_review', 'suspended'
+    ]).count()
+
+    return render(request, 'main.html', {
+        'orders': orders,
+        'total_orders': total_orders,
+        'total_employees': total_employees,
+        'completed_count': completed_count,
+        'queue_count': queue_count,
+        'in_progress_count': in_progress_count
+    })
 
 def calendar_view(request):
     return render(request, 'calendar.html')
