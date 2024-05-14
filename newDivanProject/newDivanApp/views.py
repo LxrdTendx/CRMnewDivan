@@ -355,28 +355,123 @@ def refactor_order(request, order_id):
     worker_position = JobTitle.objects.filter(name='Рабочий').first()
     executors = Employee.objects.filter(position=worker_position) if worker_position else Employee.objects.none()
 
-    executors_list = []
-    if order.executor1:
-        executors_list.append(order.executor1)
-    if order.executor2:
-        executors_list.append(order.executor2)
-    if order.executor3:
-        executors_list.append(order.executor3)
+    if request.method == 'POST':
+        # Обновляем клиента
+        client.address = request.POST.get('address')
+        client.contact_number = request.POST.get('contact_number')
+        client.full_name = request.POST.get('full_name')
+        client.comments = request.POST.get('comments')
+        client.save()
+
+        # Обновляем контракт
+        contract.num = request.POST.get('contract_num')
+        contract.create_date = datetime.strptime(request.POST.get('create_date'), '%Y-%m-%d')
+        contract.completion_date = datetime.strptime(request.POST.get('completion_date'), '%Y-%m-%d')
+        contract.total_value = float(request.POST.get('total_value'))
+        contract.payment_type = request.POST.get('payment_type')
+        contract.prepayment_share = float(request.POST.get('prepayment_share'))
+        contract.prepayment_value = float(request.POST.get('prepayment_value'))
+        contract.is_prepayment_paid = request.POST.get('is_prepayment_paid') == 'true'
+        contract.prepayment_date = datetime.strptime(request.POST.get('prepayment_date'),
+                                                     '%Y-%m-%d') if request.POST.get('prepayment_date') else None
+        contract.postpayment_value = float(request.POST.get('postpayment_value'))
+        contract.is_postpayment_paid = request.POST.get('is_postpayment_paid') == 'true'
+        contract.postpayment_date = datetime.strptime(request.POST.get('postpayment_date'),
+                                                      '%Y-%m-%d') if request.POST.get('postpayment_date') else None
+        contract.comments = request.POST.get('comments')
+        contract.save()
+
+        # Обновляем заказ
+        order.number = request.POST.get('number')
+        order.manager_id = request.POST.get('manager')
+        executors_ids = request.POST.get('executors', '').split(',') if request.POST.get('executors') else []
+        order.executor1 = Employee.objects.get(id=executors_ids[0]) if len(executors_ids) > 0 else None
+        order.executor2 = Employee.objects.get(id=executors_ids[1]) if len(executors_ids) > 1 else None
+        order.executor3 = Employee.objects.get(id=executors_ids[2]) if len(executors_ids) > 2 else None
+        order.source = request.POST.get('source')
+        order.save()
+
+        # Обновляем техническое задание
+        technical_specification.items_qty = int(request.POST.get('items_qty'))
+        technical_specification.short_descr = request.POST.get('short_descr')
+        technical_specification.item_type = request.POST.get('item_type')
+        technical_specification.furniture_type1 = request.POST.get('furniture_type1')
+        work_types = request.POST.get('work_types').split(',')
+        technical_specification.work_type1 = work_types[0] if len(work_types) > 0 else None
+        technical_specification.work_type2 = work_types[1] if len(work_types) > 1 else None
+        technical_specification.full_descr = request.POST.get('full_descr')
+        technical_specification.photo1 = request.FILES.get('photo1', technical_specification.photo1)
+        technical_specification.photo2 = request.FILES.get('photo2', technical_specification.photo2)
+        technical_specification.photo3 = request.FILES.get('photo3', technical_specification.photo3)
+        technical_specification.photo4 = request.FILES.get('photo4', technical_specification.photo4)
+        technical_specification.comments = request.POST.get('technicalspecification_comments')
+        technical_specification.save()
+
+        # Обновляем материалы
+        for material in materials:
+            material.name = request.POST.get('material_name', material.name)
+            material.in_stock = request.POST.get('stock') == 'true'
+            material.fitting_name = request.POST.get('fitting_name', material.fitting_name)
+            material.fitting_in_stock = request.POST.get('fitting_in_stock') == 'true'
+            material.comments = request.POST.get('material_comments', material.comments)
+            material.cost = float(request.POST.get('material_cost', material.cost))
+            material.order_status = request.POST.get('material_order_status', material.order_status)
+            material.order_date = datetime.strptime(request.POST.get('material_order_date'),
+                                                    '%Y-%m-%d') if request.POST.get(
+                'material_order_date') else material.order_date
+            material.payment_status = request.POST.get('material_payment_status', material.payment_status)
+            material.payment_date = datetime.strptime(request.POST.get('material_payment_date'),
+                                                      '%Y-%m-%d') if request.POST.get(
+                'material_payment_date') else material.payment_date
+            material.save()
+
+        # Обновляем информацию о заборе и доставке
+        if pickups:
+            pickups.is_picked = request.POST.get('pickupdelivery_is_picked') == 'true'
+            pickups.pickup_date = datetime.strptime(request.POST.get('pickupdelivery_pickup_date'),
+                                                    '%Y-%m-%d') if request.POST.get(
+                'pickupdelivery_pickup_date') else pickups.pickup_date
+            pickups.pickup_time = request.POST.get('pickupdelivery_pickup_time', pickups.pickup_time)
+            pickups.pickup_type = request.POST.get('pickupdelivery_pickup_type', pickups.pickup_type)
+            pickups.pickup_guy_id = Employee.objects.get(id=request.POST.get('pickup_guy')) if request.POST.get(
+                'pickup_guy') else pickups.pickup_guy
+            pickups.pickup_comments = request.POST.get('pickupdelivery_pickup_comments', pickups.pickup_comments)
+            pickups.is_delivered = request.POST.get('pickupdelivery_is_delivered') == 'true'
+            pickups.delivery_date = datetime.strptime(request.POST.get('pickupdelivery_delivery_date'),
+                                                      '%Y-%m-%d') if request.POST.get(
+                'pickupdelivery_delivery_date') else pickups.delivery_date
+            pickups.delivery_time = request.POST.get('pickupdelivery_delivery_time', pickups.delivery_time)
+            pickups.delivery_type = request.POST.get('pickupdelivery_delivery_type', pickups.delivery_type)
+            pickups.delivery_guy_id = Employee.objects.get(id=request.POST.get('delivery_guy')) if request.POST.get(
+                'delivery_guy') else pickups.delivery_guy
+            pickups.delivery_comments = request.POST.get('pickupdelivery_delivery_comments', pickups.delivery_comments)
+            pickups.save()
+
+        return redirect('orders')
+
+    else:
+        executors_list = []
+        if order.executor1:
+            executors_list.append(order.executor1)
+        if order.executor2:
+            executors_list.append(order.executor2)
+        if order.executor3:
+            executors_list.append(order.executor3)
 
 
-    context = {
-        'order': order,
-        'executors_list': executors_list,
-        'contract': contract,
-        'client': client,
-        'technical_specification': technical_specification,
-        'materials': materials,
-        'pickup': pickups,
-        'managers': managers,
-        'executors': executors,
-    }
+        context = {
+            'order': order,
+            'executors_list': executors_list,
+            'contract': contract,
+            'client': client,
+            'technical_specification': technical_specification,
+            'materials': materials,
+            'pickup': pickups,
+            'managers': managers,
+            'executors': executors,
+        }
 
-    return render(request, 'refactor_order.html', context)
+        return render(request, 'refactor_order.html', context)
 
 
 #СОТРУДНИКИ
@@ -492,7 +587,6 @@ def delete_employee(request, employee_id):
         except Employee.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Сотрудник не найден'})
     return JsonResponse({'success': False, 'error': 'Неверный запрос'})
-
 
 @csrf_exempt
 def refactor_employee(request, employee_id):

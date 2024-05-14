@@ -493,7 +493,7 @@
                             </select>
                         </label>
                         <label class="title-style" id="type_work">Тип работы<br>
-                            <select id="work_type1" multiple required>
+                            <select id="work_type1" multiple>
                                 <option value="create">Изготовление</option>
                                 <option value="reupholster">Перетяжка</option>
                                 <option value="restoration">Реставрация</option>
@@ -669,7 +669,7 @@
 
 
 
-                <button class="submit-button" type="submit" style="margin-top: 20px;margin-right: 50%;margin-left: 50%;">Создать заказ</button>
+                <button class="submit-button" type="submit" style="margin-top: 20px;margin-right: 50%;margin-left: 50%;">Сохранить изменения</button>
             </div>
             <div class="right-section">
                 <div>
@@ -680,22 +680,22 @@
                 <div style="margin-top: 60px">
                     <label class="title-style" style="width: 100%; margin-top: 60px">Фотографии<br>
                         <div style="display: flex; flex-wrap: wrap; gap: 15px">
-                            <div class="photo-avatar" style="width: 200px; height: 200px; background-image: url('{{ technical_specification.photo1.url|default_if_none:"" }}');" id="photoPreview1">
+                            <div class="photo-avatar" style="width: 200px; height: 200px; background-image: url('{% if technical_specification.photo1 %}{{ technical_specification.photo1.url }}{% endif %}')" id="photoPreview1">
                                 <label for="photoInput1" class="upload-label" style="cursor: pointer; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
                                     <input type="file" id="photoInput1" name="photo1" accept="image/*" style="display: none;">
                                 </label>
                             </div>
-                            <div class="photo-avatar" style="width: 200px; height: 200px; background-image: url('{{ technical_specification.photo2.url|default_if_none:"" }}');" id="photoPreview2">
+                            <div class="photo-avatar" style="width: 200px; height: 200px; background-image: url('{% if technical_specification.photo1 %}{{ technical_specification.photo2.url }}{% endif %}')" id="photoPreview2">
                                 <label for="photoInput2" class="upload-label" style="cursor: pointer; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
                                     <input type="file" id="photoInput2" name="photo2" accept="image/*" style="display: none;">
                                 </label>
                             </div>
-                            <div class="photo-avatar" style="width: 200px; height: 200px; background-image: url('{{ technical_specification.photo3.url|default_if_none:"" }}');" id="photoPreview3">
+                            <div class="photo-avatar" style="width: 200px; height: 200px; background-image: url('{% if technical_specification.photo1 %}{{ technical_specification.photo3.url }}{% endif %}')" id="photoPreview3">
                                 <label for="photoInput3" class="upload-label" style="cursor: pointer; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
                                     <input type="file" id="photoInput3" name="photo3" accept="image/*" style="display: none;">
                                 </label>
                             </div>
-                            <div class="photo-avatar" style="width: 200px; height: 200px; background-image: url('{{ technical_specification.photo4.url|default_if_none:"" }}');" id="photoPreview4">
+                            <div class="photo-avatar" style="width: 200px; height: 200px; background-image: url('{% if technical_specification.photo1 %}{{ technical_specification.photo4.url }}{% endif %}')" id="photoPreview4">
                                 <label for="photoInput4" class="upload-label" style="cursor: pointer; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
                                     <input type="file" id="photoInput4" name="photo4" accept="image/*" style="display: none;">
                                 </label>
