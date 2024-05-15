@@ -40,7 +40,8 @@ def calendar_view(request):
     return render(request, 'calendar.html')
 
 
-
+def add_activity(request):
+    return render(request, 'add_activity.html')
 def active_view(request):
     return render(request, 'active.html')
 
