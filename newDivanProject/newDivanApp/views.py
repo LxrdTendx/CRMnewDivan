@@ -8,12 +8,18 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from decimal import Decimal
 from datetime import datetime
+from django.db.models import Sum
 
 
 def main_view(request):
     orders = Order.objects.all().select_related('contract').prefetch_related('technical_specifications')
     total_orders = orders.count()  # Подсчитываем количество заказов
     total_employees = Employee.objects.count()
+
+    total_contract_value = Order.objects.aggregate(total_value_sum=Sum('contract__total_value'))['total_value_sum']
+    if total_contract_value is None:
+        total_contract_value = 0  # Handling cases where there are no orders/contracts
+
 
     completed_count = Order.objects.filter(status__in=['closed', 'delivered']).count()
 
@@ -31,6 +37,7 @@ def main_view(request):
         'orders': orders,
         'total_orders': total_orders,
         'total_employees': total_employees,
+        'total_contract_value': total_contract_value,
         'completed_count': completed_count,
         'queue_count': queue_count,
         'in_progress_count': in_progress_count

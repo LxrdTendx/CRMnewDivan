@@ -416,7 +416,7 @@
                     Обороты
                 </div>
                 <div class="stat-info">
-                    54,947,200 ₽
+                    {{ total_contract_value }} ₽
                 </div>
             </div>
             <div class="stat">
@@ -440,7 +440,7 @@
     <div class="turnover-graph">
         <canvas id="myChart"></canvas>
         <div class="graph-info">
-            <div class="turnover-info"><span>₽</span> 10,000,000.00 </div>
+            <div class="turnover-info"><span>₽</span> {{ total_contract_value }} </div>
             <div class="turnover-title">Обороты в месяц</div>
         </div>
     </div>
