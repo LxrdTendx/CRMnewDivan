@@ -114,8 +114,8 @@
         background: white;
     }
     .left-section {
-        margin-left: 70px;
-        margin-top: 140px; /* Добавляем отступ сверху, равный высоте заголовка */
+        width: 60%;
+
     }
     .newdivan-info{
         justify-content: space-between;
@@ -407,8 +407,8 @@
     </div>
 </div>
 
-
-<div class="left-section">
+<div style="display: flex; gap: 20px;  margin-left: 70px; margin-top: 140px; flex-wrap: wrap">
+    <div class="left-section">
     <div class="newdivan-info">
         <div class="title-block">Newdivan</div>
         <div class="stats-block">
@@ -493,6 +493,11 @@
     </div>
 
 </div>
+    <div>
+        <img src="{% static 'Group 232.png' %}" alt="Logo">
+    </div>
+</div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
